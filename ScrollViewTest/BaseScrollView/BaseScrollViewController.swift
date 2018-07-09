@@ -57,7 +57,7 @@ extension BaseScrollViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: BaseScrollViewController.cellIdentifier, for: indexPath)
         if indexPath.row == 0 {
-            let imageView = UIImageView(image: UIImage(named: "img_cat.jpg"))
+            let imageView = UIImageView(image: UIImage(named: "image0.jpg"))
             imageView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: imageViewHeight)
             cell.contentView.addSubview(imageView)
         } else {

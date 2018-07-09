@@ -54,6 +54,10 @@ extension StartViewController: UITableViewDataSource {
             let viewController = BaseScrollViewController()
             viewController.title = tableViewContents[row]
             navigationController?.pushViewController(viewController, animated: true)
+        case 2:
+            let viewController = PictureAutoScrollViewController()
+            viewController.title = tableViewContents[row]
+            navigationController?.pushViewController(viewController, animated: true)
         default:
             break
         }
