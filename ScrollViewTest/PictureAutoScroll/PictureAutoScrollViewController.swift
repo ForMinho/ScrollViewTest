@@ -46,6 +46,10 @@ class PictureAutoScrollViewController: UIViewController {
             mainTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         } else {
             // Fallback on earlier versions
+            mainTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+            mainTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+            mainTableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+            mainTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         }
     }
     
