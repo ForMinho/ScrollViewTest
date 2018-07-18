@@ -16,3 +16,4 @@ extension BaseTableView: UIGestureRecognizerDelegate {
         return true
     }
 }
+

@@ -2,8 +2,8 @@ import Foundation
 
 class PictureAutoScrollView: UIView {
     private var images = [String]()
-    private var imageViews = [UIImageView]()
-    private var beginContentOffsetX: CGFloat = 0
+    private var currentIndex: Int = 0
+    var duration: Double = 2.0
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView(frame: .zero)
@@ -12,7 +12,50 @@ class PictureAutoScrollView: UIView {
         scrollView.isPagingEnabled = true
         scrollView.backgroundColor = UIColor.gray
         scrollView.showsHorizontalScrollIndicator = false
+        
+        scrollView.addSubview(previousImageView)
+        scrollView.addSubview(currentImageView)
+        scrollView.addSubview(nextImageView)
+        
+        previousImageView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+        previousImageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
+        previousImageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor).isActive = true
+        previousImageView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: 0).isActive = true
+        previousImageView.heightAnchor.constraint(equalTo: scrollView.heightAnchor, constant: 0).isActive = true
+        
+        currentImageView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+        currentImageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
+        currentImageView.leadingAnchor.constraint(equalTo: previousImageView.trailingAnchor).isActive = true
+        currentImageView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        currentImageView.heightAnchor.constraint(equalTo: scrollView.heightAnchor).isActive = true
+        
+        nextImageView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+        nextImageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
+        nextImageView.leadingAnchor.constraint(equalTo: currentImageView.trailingAnchor).isActive = true
+        nextImageView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).isActive = true
+        nextImageView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        nextImageView.heightAnchor.constraint(equalTo: scrollView.heightAnchor).isActive = true
+        
         return scrollView
+    }()
+    
+    private lazy var previousImageView: UIImageView = {
+        let imageView = UIImageView(frame: .zero)
+        imageView.backgroundColor = UIColor.black
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private lazy var currentImageView: UIImageView = {
+        let imageView = UIImageView(frame: .zero)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private lazy var nextImageView: UIImageView = {
+        let imageView = UIImageView(frame: .zero)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
     private lazy var pageControl: UIPageControl = {
@@ -42,51 +85,59 @@ class PictureAutoScrollView: UIView {
     
     func setImages(forScrollView images: [String]) {
         guard images.count > 0 else { return }
-        var images = images
         pageControl.numberOfPages = images.count
-        if let firstImage = images.first, let lastImage = images.last {
-            images.insert(lastImage, at: 0)
-            images.insert(firstImage, at: images.count)
-        }
-       
-        self.images = images
-
-        scrollView.contentSize = CGSize(width: scrollView.frame.width * CGFloat(images.count), height: scrollView.frame.height)
-        for index in 0..<images.count {
-            let imageView = UIImageView(frame: CGRect(x: scrollView.frame.size.width * CGFloat(index), y: 0, width: scrollView.frame.size.width, height: scrollView.frame.size.height))
-            imageView.image = UIImage(named: images[index])
-            imageViews.append(imageView)
-            scrollView.addSubview(imageView)
-        }
         pageControl.currentPage = 0
-        scrollView.scrollRectToVisible(CGRect(x: scrollView.frame.width, y: 0, width: scrollView.frame.width, height: scrollView.frame.height), animated: false)
-        initStartTImer()
+        self.images = images
+        
+        if images.count <= 1 {
+        } else {
+            initStartTImer()
+        }
+        refreshCurrentImageView()
+    }
+
+}
+
+extension PictureAutoScrollView {
+    private func refreshCurrentIndex() {
+        if scrollView.contentOffset.x >= scrollView.bounds.width * 2 {
+            currentIndex = currentIndex + 1
+        } else if scrollView.contentOffset.x <= scrollView.bounds.width * 0.5 {
+            currentIndex = currentIndex - 1
+        }
+        
+        if currentIndex < 0 {
+            currentIndex = images.count - 1
+        } else if currentIndex >= images.count {
+            currentIndex = 0
+        }
     }
     
-    private func moveToImageVeiw(_ index: Int, animated: Bool = false) {
-        var currnetPage = index
-        if index == -1 {
-            currnetPage = pageControl.numberOfPages - 1
-            scrollView.contentOffset = CGPoint(x: scrollView.frame.width * CGFloat(pageControl.numberOfPages), y: 0)
-        } else if index == pageControl.numberOfPages {
-            currnetPage = 0
-            scrollView.contentOffset = CGPoint(x: scrollView.frame.width, y: 0)
-        }
-        scrollView.scrollRectToVisible(CGRect(x: scrollView.frame.width * CGFloat(currnetPage + 1), y: 0, width: scrollView.frame.width, height: scrollView.frame.height), animated: true)
-        pageControl.currentPage = currnetPage
+    private func refreshCurrentImageView() {
+        loadImageView(currentImageView, imageName: images[currentIndex])
+        
+        let previousIndex = currentIndex - 1 < 0 ? images.count - 1 : currentIndex - 1
+        loadImageView(previousImageView, imageName: images[previousIndex])
+        
+        let nextIndex = currentIndex + 1 >= images.count ? 0 : currentIndex + 1
+        loadImageView(nextImageView, imageName: images[nextIndex])
+        
+        scrollView.contentOffset = CGPoint(x: scrollView.frame.width, y: 0)
+    }
+    
+    private func loadImageView(_ imageView: UIImageView, imageName: String) {
+        imageView.image = UIImage(named: imageName)
     }
 }
 
 extension PictureAutoScrollView {
     @objc private func autoScrollTimerAction(_ timer: Timer) {
-//        scrollView.scrollRectToVisible(CGRect(x: scrollView.frame.width * CGFloat(pageControl.currentPage + 1), y: 0, width: scrollView.frame.width, height: scrollView.frame.height), animated: true)
-
-        moveToImageVeiw(pageControl.currentPage + 1)
+        scrollView.setContentOffset(CGPoint(x: scrollView.frame.width * 2, y: 0), animated: true)
     }
     
     private func initStartTImer() {
         invalidateTimer()
-        autoScrollTimer = Timer.init(timeInterval: 1.5, target: self, selector: #selector(autoScrollTimerAction(_:)), userInfo: nil, repeats: true)
+        autoScrollTimer = Timer.init(timeInterval: duration, target: self, selector: #selector(autoScrollTimerAction(_:)), userInfo: nil, repeats: true)
         if let autoScrollTimer = autoScrollTimer {
             RunLoop.current.add(autoScrollTimer, forMode: .commonModes)
         }
@@ -102,21 +153,22 @@ extension PictureAutoScrollView: UIScrollViewDelegate {
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         invalidateTimer()
-        beginContentOffsetX = scrollView.contentOffset.x
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let endContentOffsetX = scrollView.contentOffset.x
-        
-        if endContentOffsetX > beginContentOffsetX && endContentOffsetX - beginContentOffsetX >= scrollView.frame.width / 2 {
-            moveToImageVeiw(min(pageControl.currentPage + 1, images.count))
-
-        } else if endContentOffsetX < beginContentOffsetX && beginContentOffsetX - endContentOffsetX >= scrollView.frame.width / 2{
-            moveToImageVeiw(max(pageControl.currentPage - 1, -1))
-        } else {
-
+        refreshCurrentIndex()
+        if currentIndex != pageControl.currentPage {
+            pageControl.currentPage = currentIndex
+            refreshCurrentImageView()
         }
-        
         initStartTImer()
+    }
+    
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        refreshCurrentIndex()
+        if currentIndex != pageControl.currentPage {
+            pageControl.currentPage = currentIndex
+            refreshCurrentImageView()
+        }
     }
 }

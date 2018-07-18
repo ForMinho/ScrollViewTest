@@ -4,14 +4,17 @@ class PictureAutoScrollViewController: UIViewController {
         static let mainTableViewCellIdentifier = "mainTableViewCellIdentifier"
         static let subTableViewCellIdentifier = "subTableViewCellIdentifier"
     }
+    
+    private var canScroll: Bool = true
+    
     private lazy var pictureAutoScrollView: PictureAutoScrollView = {
         let view = PictureAutoScrollView(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private lazy var mainTableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .plain)
+    private lazy var mainTableView: BaseTableView = {
+        let tableView = BaseTableView(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
@@ -19,12 +22,9 @@ class PictureAutoScrollViewController: UIViewController {
         return tableView
     }()
     
-    private lazy var subTableView: BaseTableView = {
-        let tableView = BaseTableView(frame: .zero, style: .plain)
+    private lazy var subTableView: PictureAutoSubTableView = {
+        let tableView = PictureAutoSubTableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.subTableViewCellIdentifier)
         return tableView
     }()
     
@@ -38,6 +38,7 @@ class PictureAutoScrollViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor.white
         view.addSubview(mainTableView)
         if #available(iOS 11.0, *) {
             mainTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
@@ -51,6 +52,13 @@ class PictureAutoScrollViewController: UIViewController {
             mainTableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
             mainTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(changeStatusWithNotification(_:)), name: PictureAutoSubTableView.subTableViewToTop, object: subTableView)
+    }
+    
+    @objc func changeStatusWithNotification(_ notification: Notification) {
+        canScroll = true
+        subTableView.canScroll = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -67,44 +75,58 @@ class PictureAutoScrollViewController: UIViewController {
 
 extension PictureAutoScrollViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if tableView.isEqual(mainTableView) {
-            if indexPath.row == 0{
-                return 200
-            }
-            return view.frame.height - 200
+        if indexPath.row == 0{
+            return 200
         }
-        return 44
+        if #available(iOS 11.0, *) {
+            return view.safeAreaLayoutGuide.layoutFrame.height
+        }
+        return view.frame.height
     }
 }
 
 extension PictureAutoScrollViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableView.isEqual(mainTableView) {
-            return 2
-        }
-        return subTableData.count
+        return 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if tableView.isEqual(mainTableView) {
-            let dequeueCell = tableView.dequeueReusableCell(withIdentifier: Constants.mainTableViewCellIdentifier, for: indexPath)
-            if indexPath.row == 0 {
-                dequeueCell.contentView.addSubview(pictureAutoScrollView)
-                pictureAutoScrollView.centerXAnchor.constraint(equalTo: dequeueCell.centerXAnchor).isActive = true
-                pictureAutoScrollView.centerYAnchor.constraint(equalTo: dequeueCell.centerYAnchor).isActive = true
-                pictureAutoScrollView.widthAnchor.constraint(equalToConstant: dequeueCell.frame.width).isActive = true
-                pictureAutoScrollView.heightAnchor.constraint(equalToConstant: dequeueCell.frame.height).isActive = true
-            } else {
-                dequeueCell.contentView.addSubview(subTableView)
-                subTableView.trailingAnchor.constraint(equalTo: dequeueCell.trailingAnchor).isActive = true
-                subTableView.leadingAnchor.constraint(equalTo: dequeueCell.leadingAnchor).isActive = true
-                subTableView.topAnchor.constraint(equalTo: dequeueCell.topAnchor).isActive = true
-                subTableView.bottomAnchor.constraint(equalTo: dequeueCell.bottomAnchor).isActive = true
-            }
-            return dequeueCell
+        let dequeueCell = tableView.dequeueReusableCell(withIdentifier: Constants.mainTableViewCellIdentifier, for: indexPath)
+        if indexPath.row == 0 {
+            dequeueCell.contentView.addSubview(pictureAutoScrollView)
+            pictureAutoScrollView.topAnchor.constraint(equalTo: dequeueCell.topAnchor).isActive = true
+            pictureAutoScrollView.bottomAnchor.constraint(equalTo: dequeueCell.bottomAnchor).isActive = true
+            pictureAutoScrollView.leadingAnchor.constraint(equalTo: dequeueCell.leadingAnchor).isActive = true
+            pictureAutoScrollView.trailingAnchor.constraint(equalTo: dequeueCell.trailingAnchor).isActive = true
+
+            pictureAutoScrollView.widthAnchor.constraint(equalToConstant: dequeueCell.frame.width).isActive = true
+            pictureAutoScrollView.heightAnchor.constraint(equalToConstant: dequeueCell.frame.height).isActive = true
+        } else {
+            dequeueCell.contentView.addSubview(subTableView)
+            subTableView.trailingAnchor.constraint(equalTo: dequeueCell.trailingAnchor).isActive = true
+            subTableView.leadingAnchor.constraint(equalTo: dequeueCell.leadingAnchor).isActive = true
+            subTableView.topAnchor.constraint(equalTo: dequeueCell.topAnchor).isActive = true
+            subTableView.bottomAnchor.constraint(equalTo: dequeueCell.bottomAnchor).isActive = true
+            subTableView.widthAnchor.constraint(equalTo: dequeueCell.widthAnchor).isActive = true
+            subTableView.heightAnchor.constraint(equalTo: dequeueCell.heightAnchor).isActive = true
+            subTableView.subTableData = subTableData
         }
-        let subTableViewCell = tableView.dequeueReusableCell(withIdentifier: Constants.subTableViewCellIdentifier, for: indexPath)
-        subTableViewCell.textLabel?.text = subTableData[indexPath.row]
-        return subTableViewCell
+        return dequeueCell
+    }
+}
+
+extension PictureAutoScrollViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y >= 200 {
+            scrollView.contentOffset = CGPoint(x: 0, y: 200)
+            if canScroll {
+                canScroll = false
+                subTableView.canScroll = true
+            }
+        } else {
+            if !canScroll {
+                scrollView.contentOffset = CGPoint(x: 0, y: 200)
+            }
+        }
     }
 }

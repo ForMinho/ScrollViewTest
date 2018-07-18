@@ -23,6 +23,7 @@
 		AA83DF0D20DCCB0F00689412 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AA83DF0C20DCCB0F00689412 /* main.m */; };
 		AACA18D920E9C2DB000399FE /* BaseTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AACA18D820E9C2DB000399FE /* BaseTableView.swift */; };
 		AACA18E520E9F750000399FE /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AACA18E420E9F750000399FE /* StartViewController.swift */; };
+		AAD6DF7620FF144000A1170E /* PictureAutoSubTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD6DF7520FF144000A1170E /* PictureAutoSubTableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 		AA83DF1320DCCB6500689412 /* ScrollViewTest-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ScrollViewTest-Bridging-Header.h"; sourceTree = "<group>"; };
 		AACA18D820E9C2DB000399FE /* BaseTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableView.swift; sourceTree = "<group>"; };
 		AACA18E420E9F750000399FE /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
+		AAD6DF7520FF144000A1170E /* PictureAutoSubTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureAutoSubTableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,8 +106,9 @@
 		AA072AE320EF4FA400C524C6 /* PictureAutoScroll */ = {
 			isa = PBXGroup;
 			children = (
-				AA072AE420EF4FDB00C524C6 /* PictureAutoScrollViewController.swift */,
 				AA072AE620EF4FFC00C524C6 /* PictureAutoScrollView.swift */,
+				AA072AE420EF4FDB00C524C6 /* PictureAutoScrollViewController.swift */,
+				AAD6DF7520FF144000A1170E /* PictureAutoSubTableView.swift */,
 			);
 			path = PictureAutoScroll;
 			sourceTree = "<group>";
@@ -224,6 +227,7 @@
 				AACA18D920E9C2DB000399FE /* BaseTableView.swift in Sources */,
 				AACA18E520E9F750000399FE /* StartViewController.swift in Sources */,
 				AA072AE720EF4FFC00C524C6 /* PictureAutoScrollView.swift in Sources */,
+				AAD6DF7620FF144000A1170E /* PictureAutoSubTableView.swift in Sources */,
 				AA0729EB20E9FE2800C524C6 /* BaseScrollViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
