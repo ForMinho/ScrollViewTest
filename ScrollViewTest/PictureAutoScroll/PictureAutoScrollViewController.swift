@@ -19,6 +19,7 @@ class PictureAutoScrollViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.mainTableViewCellIdentifier)
+        tableView.register(SubTableViewCell.self, forCellReuseIdentifier: Constants.subTableViewCellIdentifier)
         return tableView
     }()
     
@@ -30,7 +31,7 @@ class PictureAutoScrollViewController: UIViewController {
     
     private lazy var subTableData: [String] = {
         var array = [String]()
-        for index in 0...20 {
+        for index in 0...25 {
             array.append(String(index) + " ———— subTableData")
         }
         return array
@@ -40,6 +41,7 @@ class PictureAutoScrollViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
         view.addSubview(mainTableView)
+        automaticallyAdjustsScrollViewInsets = false
         if #available(iOS 11.0, *) {
             mainTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
             mainTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
@@ -91,8 +93,8 @@ extension PictureAutoScrollViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let dequeueCell = tableView.dequeueReusableCell(withIdentifier: Constants.mainTableViewCellIdentifier, for: indexPath)
         if indexPath.row == 0 {
+            let dequeueCell = tableView.dequeueReusableCell(withIdentifier: Constants.mainTableViewCellIdentifier, for: indexPath)
             dequeueCell.contentView.addSubview(pictureAutoScrollView)
             pictureAutoScrollView.topAnchor.constraint(equalTo: dequeueCell.topAnchor).isActive = true
             pictureAutoScrollView.bottomAnchor.constraint(equalTo: dequeueCell.bottomAnchor).isActive = true
@@ -101,7 +103,9 @@ extension PictureAutoScrollViewController: UITableViewDataSource {
 
             pictureAutoScrollView.widthAnchor.constraint(equalToConstant: dequeueCell.frame.width).isActive = true
             pictureAutoScrollView.heightAnchor.constraint(equalToConstant: dequeueCell.frame.height).isActive = true
+            return dequeueCell
         } else {
+            let dequeueCell = tableView.dequeueReusableCell(withIdentifier: Constants.subTableViewCellIdentifier, for: indexPath)
             dequeueCell.contentView.addSubview(subTableView)
             subTableView.trailingAnchor.constraint(equalTo: dequeueCell.trailingAnchor).isActive = true
             subTableView.leadingAnchor.constraint(equalTo: dequeueCell.leadingAnchor).isActive = true
@@ -110,23 +114,27 @@ extension PictureAutoScrollViewController: UITableViewDataSource {
             subTableView.widthAnchor.constraint(equalTo: dequeueCell.widthAnchor).isActive = true
             subTableView.heightAnchor.constraint(equalTo: dequeueCell.heightAnchor).isActive = true
             subTableView.subTableData = subTableData
+            return dequeueCell
         }
-        return dequeueCell
+        return UITableViewCell(style: .default, reuseIdentifier: Constants.mainTableViewCellIdentifier)
     }
 }
 
 extension PictureAutoScrollViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y >= 200 {
-            scrollView.contentOffset = CGPoint(x: 0, y: 200)
+        let bottomY: CGFloat = 200
+        if scrollView.contentOffset.y >= bottomY {
+            scrollView.contentOffset = CGPoint(x: 0, y: bottomY)
             if canScroll {
                 canScroll = false
                 subTableView.canScroll = true
             }
         } else {
             if !canScroll {
-                scrollView.contentOffset = CGPoint(x: 0, y: 200)
+                scrollView.contentOffset = CGPoint(x: 0, y: bottomY)
             }
         }
+        
+        mainTableView.showsVerticalScrollIndicator = canScroll
     }
 }

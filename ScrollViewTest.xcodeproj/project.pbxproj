@@ -24,9 +24,14 @@
 		AACA18D920E9C2DB000399FE /* BaseTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AACA18D820E9C2DB000399FE /* BaseTableView.swift */; };
 		AACA18E520E9F750000399FE /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AACA18E420E9F750000399FE /* StartViewController.swift */; };
 		AAD6DF7620FF144000A1170E /* PictureAutoSubTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD6DF7520FF144000A1170E /* PictureAutoSubTableView.swift */; };
+		AAD6EF0E2108702200876ADF /* SubTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD6EF0D2108702200876ADF /* SubTableViewCell.swift */; };
+		D2972B46F3137FD507E59F39 /* libPods-ScrollViewTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22508274AD0886F2A2AF41F2 /* libPods-ScrollViewTest.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		22508274AD0886F2A2AF41F2 /* libPods-ScrollViewTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ScrollViewTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B8AE673B212ECCDC52916BD /* Pods-ScrollViewTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ScrollViewTest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ScrollViewTest/Pods-ScrollViewTest.debug.xcconfig"; sourceTree = "<group>"; };
+		5275B1AD81FC0BA22C55EABA /* Pods-ScrollViewTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ScrollViewTest.release.xcconfig"; path = "Pods/Target Support Files/Pods-ScrollViewTest/Pods-ScrollViewTest.release.xcconfig"; sourceTree = "<group>"; };
 		AA0729EA20E9FE2800C524C6 /* BaseScrollViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseScrollViewController.swift; sourceTree = "<group>"; };
 		AA072ADD20EF4C2D00C524C6 /* image0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = image0.jpg; sourceTree = "<group>"; };
 		AA072AE120EF4D3E00C524C6 /* VideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
@@ -48,6 +53,7 @@
 		AACA18D820E9C2DB000399FE /* BaseTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableView.swift; sourceTree = "<group>"; };
 		AACA18E420E9F750000399FE /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		AAD6DF7520FF144000A1170E /* PictureAutoSubTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureAutoSubTableView.swift; sourceTree = "<group>"; };
+		AAD6EF0D2108702200876ADF /* SubTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,12 +61,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2972B46F3137FD507E59F39 /* libPods-ScrollViewTest.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		39756FC91396F6540989A295 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				22508274AD0886F2A2AF41F2 /* libPods-ScrollViewTest.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		97D7D4EFF58C6359CA866444 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3B8AE673B212ECCDC52916BD /* Pods-ScrollViewTest.debug.xcconfig */,
+				5275B1AD81FC0BA22C55EABA /* Pods-ScrollViewTest.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		AA0729F320EA045600C524C6 /* BaseScrollView */ = {
 			isa = PBXGroup;
 			children = (
@@ -109,6 +133,7 @@
 				AA072AE620EF4FFC00C524C6 /* PictureAutoScrollView.swift */,
 				AA072AE420EF4FDB00C524C6 /* PictureAutoScrollViewController.swift */,
 				AAD6DF7520FF144000A1170E /* PictureAutoSubTableView.swift */,
+				AAD6EF0D2108702200876ADF /* SubTableViewCell.swift */,
 			);
 			path = PictureAutoScroll;
 			sourceTree = "<group>";
@@ -118,6 +143,8 @@
 			children = (
 				AA83DEFB20DCCB0D00689412 /* Products */,
 				AA83DEFC20DCCB0D00689412 /* ScrollViewTest */,
+				97D7D4EFF58C6359CA866444 /* Pods */,
+				39756FC91396F6540989A295 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -151,9 +178,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AA83DF1020DCCB0F00689412 /* Build configuration list for PBXNativeTarget "ScrollViewTest" */;
 			buildPhases = (
+				25A1D90D29949EBF1852219E /* [CP] Check Pods Manifest.lock */,
 				AA83DEF620DCCB0D00689412 /* Sources */,
 				AA83DEF720DCCB0D00689412 /* Frameworks */,
 				AA83DEF820DCCB0D00689412 /* Resources */,
+				CB3E241F9343860BEE867372 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -214,11 +243,51 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		25A1D90D29949EBF1852219E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ScrollViewTest-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CB3E241F9343860BEE867372 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ScrollViewTest/Pods-ScrollViewTest-resources.sh",
+				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ScrollViewTest/Pods-ScrollViewTest-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		AA83DEF620DCCB0D00689412 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAD6EF0E2108702200876ADF /* SubTableViewCell.swift in Sources */,
 				AA792CA120E2426800E24A6F /* BaseWebView.swift in Sources */,
 				AA072AE220EF4D3E00C524C6 /* VideoViewController.swift in Sources */,
 				AA83DF0D20DCCB0F00689412 /* main.m in Sources */,
@@ -366,6 +435,7 @@
 		};
 		AA83DF1120DCCB0F00689412 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3B8AE673B212ECCDC52916BD /* Pods-ScrollViewTest.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -390,6 +460,7 @@
 		};
 		AA83DF1220DCCB0F00689412 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5275B1AD81FC0BA22C55EABA /* Pods-ScrollViewTest.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

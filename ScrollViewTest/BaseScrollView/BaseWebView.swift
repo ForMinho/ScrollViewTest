@@ -23,6 +23,7 @@ extension BaseWebView: UIScrollViewDelegate {
         }
         if scrollView.contentOffset.y <= 0 {
             canScroll = false
+            scrollView.contentOffset = .zero
             NotificationCenter.default.post(name: BaseWebView.BaseWebViewToTop, object: self)
         }
     }

@@ -8,7 +8,7 @@ class BaseScrollViewController: UIViewController {
     
     private var baseWebView: BaseWebView = {
         let webView = BaseWebView(frame: .zero)
-        webView.load(URLRequest(url: URL(string: "https://www.baidu.com")!))
+        webView.load(URLRequest(url: URL(string: "https://github.com/indulgeIn/YBMultistageScrollView")!))
         return webView
     }()
     
@@ -71,13 +71,14 @@ extension BaseScrollViewController: UITableViewDataSource {
 extension BaseScrollViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         NSLog("BaseViewController__scrollViewDidScroll:")
-        if  !canScroll {
-            scrollView.contentOffset = CGPoint(x: 0, y: imageViewHeight)
-        }
         if scrollView.contentOffset.y >= imageViewHeight {
             scrollView.contentOffset = CGPoint(x: 0, y: imageViewHeight)
             canScroll = false
             baseWebView.canScroll = true
+        } else {
+            if !canScroll {
+                scrollView.contentOffset = CGPoint(x: 0, y: imageViewHeight)
+            }
         }
     }
 }

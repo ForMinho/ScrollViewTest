@@ -18,6 +18,10 @@ class PictureAutoSubTableView: UIView {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.tableCellIdentifier)
+        tableView.tableFooterView = MJRefreshAutoNormalFooter(refreshingBlock: {
+            self.fetchMoreData()
+        })
+        tableView.bounces = false
         return tableView
     }()
     
@@ -35,11 +39,14 @@ class PictureAutoSubTableView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    @objc private func fetchMoreData() {
+        NSLog(" ------- fetchMoreData()")
+    }
 }
 
 extension PictureAutoSubTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 44
+        return 50
     }
 }
 
@@ -62,7 +69,9 @@ extension PictureAutoSubTableView: UIScrollViewDelegate {
         }
         if scrollView.contentOffset.y <= 0 {
             canScroll = false
+            scrollView.contentOffset = .zero
             NotificationCenter.default.post(name: PictureAutoSubTableView.subTableViewToTop, object: self)
         }
+        tableView.showsVerticalScrollIndicator = canScroll
     }
 }
