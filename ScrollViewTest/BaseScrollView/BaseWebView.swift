@@ -17,7 +17,7 @@ class BaseWebView: WKWebView {
 
 extension BaseWebView: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        NSLog("BaseWebView__scrollViewDidScroll:")
+//        NSLog("BaseWebView__scrollViewDidScroll:scrollView.height = \(scrollView.contentSize.height - scrollView.frame.height), scrollView.contentOffset.y = \(scrollView.contentOffset.y), scrollView.contentSize.height = \(scrollView.contentSize.height)")
         if !canScroll {
             scrollView.contentOffset = .zero
         }

@@ -12,16 +12,19 @@ class PictureAutoSubTableView: UIView {
         }
     }
     
-    private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .plain)
+    private lazy var footView: MJRefreshAutoNormalFooter = {
+        return MJRefreshAutoNormalFooter(refreshingBlock: {
+            self.fetchMoreData()
+        })
+    }()
+    
+    private(set) lazy var tableView: BaseTableView = {
+        let tableView = BaseTableView(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.tableCellIdentifier)
-        tableView.tableFooterView = MJRefreshAutoNormalFooter(refreshingBlock: {
-            self.fetchMoreData()
-        })
-        tableView.bounces = false
+        tableView.tableFooterView = footView
         return tableView
     }()
     
@@ -39,8 +42,19 @@ class PictureAutoSubTableView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc private func fetchMoreData() {
+    private func fetchMoreData() {
         NSLog(" ------- fetchMoreData()")
+
+//        DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + 0.5, execute: {
+//            var array = [String]()
+//            for index in 0...5 {
+//                array.append(String(index) + " ———— subTableData")
+//            }
+//            DispatchQueue.main.async {
+//                self.subTableData.append(contentsOf: array)
+//                self.footView.endRefreshing()
+//            }
+//        })
     }
 }
 

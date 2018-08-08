@@ -55,12 +55,12 @@ class PictureAutoScrollViewController: UIViewController {
             mainTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(changeStatusWithNotification(_:)), name: PictureAutoSubTableView.subTableViewToTop, object: subTableView)
+        NotificationCenter.default.addObserver(self, selector: #selector(changeStatusWithNotification(_:)), name: PictureAutoSubTableView.subTableViewToTop, object: nil)
     }
     
     @objc func changeStatusWithNotification(_ notification: Notification) {
         canScroll = true
-        subTableView.canScroll = false
+//        subTableView.canScroll = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -116,13 +116,14 @@ extension PictureAutoScrollViewController: UITableViewDataSource {
             subTableView.subTableData = subTableData
             return dequeueCell
         }
-        return UITableViewCell(style: .default, reuseIdentifier: Constants.mainTableViewCellIdentifier)
     }
 }
 
 extension PictureAutoScrollViewController: UIScrollViewDelegate {
+  
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let bottomY: CGFloat = 200
+        let bottomY: CGFloat = mainTableView.rectForRow(at: IndexPath(row: 1, section: 0)).origin.y
+        NSLog("bottomY = \(bottomY)")
         if scrollView.contentOffset.y >= bottomY {
             scrollView.contentOffset = CGPoint(x: 0, y: bottomY)
             if canScroll {

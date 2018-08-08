@@ -47,11 +47,19 @@ extension BaseScrollViewController: UITableViewDelegate {
         }
         return webViewHeight
     }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 0.001;
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0.001;
+    }
 }
 
 extension BaseScrollViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -70,11 +78,13 @@ extension BaseScrollViewController: UITableViewDataSource {
 
 extension BaseScrollViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        NSLog("BaseViewController__scrollViewDidScroll:")
+        
         if scrollView.contentOffset.y >= imageViewHeight {
             scrollView.contentOffset = CGPoint(x: 0, y: imageViewHeight)
-            canScroll = false
-            baseWebView.canScroll = true
+            if canScroll {
+                canScroll = false
+                baseWebView.canScroll = true
+            }
         } else {
             if !canScroll {
                 scrollView.contentOffset = CGPoint(x: 0, y: imageViewHeight)
