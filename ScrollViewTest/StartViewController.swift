@@ -16,6 +16,30 @@ class StartViewController: UIViewController {
     }()
     
     private lazy var tableViewContents = ["基础滚动", "视频滚动", "图片滚动", "复合式滚动"]
+    private lazy var tableImageViews: [String] = {
+        var array = [String]()
+        for index in 0...3 {
+            array.append("image"+String(index)+".jpg")
+        }
+        return array
+    }()
+    
+    private lazy var webViewController: ZCWebViewController = {
+        let viewController = ZCWebViewController(nibName: nil, bundle: nil)
+        viewController.view.translatesAutoresizingMaskIntoConstraints = false
+        return viewController
+    }()
+    
+    private lazy var picAutoViewController: PictureAutoSubTableViewController = {
+        let viewController = PictureAutoSubTableViewController(nibName: nil, bundle: nil)
+        viewController.view.translatesAutoresizingMaskIntoConstraints = false
+        viewController.subTableData = ["1", "2", "3", "34", "56"]
+        return viewController
+    }()
+    
+    private lazy var tableContainerViews: [UIViewController] = {
+        return [webViewController, picAutoViewController]
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,8 +50,6 @@ class StartViewController: UIViewController {
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
-       
     }
 }
 
@@ -55,10 +77,14 @@ extension StartViewController: UITableViewDataSource {
         case 0:
             let viewController = BaseScrollViewController()
             viewController.title = tableViewContents[row]
+            viewController.imageArray = [tableImageViews.first!]
+            viewController.continerViewArray = tableContainerViews
             navigationController?.pushViewController(viewController, animated: true)
         case 2:
-            let viewController = PictureAutoScrollViewController()
+            let viewController = BaseScrollViewController()
             viewController.title = tableViewContents[row]
+            viewController.imageArray = tableImageViews
+            viewController.continerViewArray = tableContainerViews
             navigationController?.pushViewController(viewController, animated: true)
         default:
             break

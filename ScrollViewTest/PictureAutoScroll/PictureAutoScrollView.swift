@@ -90,6 +90,7 @@ class PictureAutoScrollView: UIView {
         self.images = images
         
         if images.count <= 1 {
+            scrollView.isScrollEnabled = false
         } else {
             initStartTImer()
         }

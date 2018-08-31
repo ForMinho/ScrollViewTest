@@ -23,10 +23,16 @@ class PictureAutoScrollViewController: UIViewController {
         return tableView
     }()
     
-    private lazy var subTableView: PictureAutoSubTableView = {
-        let tableView = PictureAutoSubTableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        return tableView
+    private lazy var collectionViewController: BaseCollectioViewController = {
+        let viewController = BaseCollectioViewController()
+        viewController.view.translatesAutoresizingMaskIntoConstraints = false
+        return viewController
+    }()
+    
+    private lazy var subTableViewController: PictureAutoSubTableViewController = {
+        let tableViewController = PictureAutoSubTableViewController()
+        tableViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        return tableViewController
     }()
     
     private lazy var subTableData: [String] = {
@@ -41,7 +47,6 @@ class PictureAutoScrollViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
         view.addSubview(mainTableView)
-        automaticallyAdjustsScrollViewInsets = false
         if #available(iOS 11.0, *) {
             mainTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
             mainTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
@@ -54,13 +59,11 @@ class PictureAutoScrollViewController: UIViewController {
             mainTableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
             mainTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         }
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(changeStatusWithNotification(_:)), name: PictureAutoSubTableView.subTableViewToTop, object: nil)
     }
     
     @objc func changeStatusWithNotification(_ notification: Notification) {
         canScroll = true
-//        subTableView.canScroll = false
+        subTableViewController.canScroll = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -106,14 +109,15 @@ extension PictureAutoScrollViewController: UITableViewDataSource {
             return dequeueCell
         } else {
             let dequeueCell = tableView.dequeueReusableCell(withIdentifier: Constants.subTableViewCellIdentifier, for: indexPath)
-            dequeueCell.contentView.addSubview(subTableView)
-            subTableView.trailingAnchor.constraint(equalTo: dequeueCell.trailingAnchor).isActive = true
-            subTableView.leadingAnchor.constraint(equalTo: dequeueCell.leadingAnchor).isActive = true
-            subTableView.topAnchor.constraint(equalTo: dequeueCell.topAnchor).isActive = true
-            subTableView.bottomAnchor.constraint(equalTo: dequeueCell.bottomAnchor).isActive = true
-            subTableView.widthAnchor.constraint(equalTo: dequeueCell.widthAnchor).isActive = true
-            subTableView.heightAnchor.constraint(equalTo: dequeueCell.heightAnchor).isActive = true
-            subTableView.subTableData = subTableData
+            dequeueCell.contentView.addSubview(collectionViewController.view)
+            collectionViewController.view.trailingAnchor.constraint(equalTo: dequeueCell.trailingAnchor).isActive = true
+            collectionViewController.view.leadingAnchor.constraint(equalTo: dequeueCell.leadingAnchor).isActive = true
+            collectionViewController.view.topAnchor.constraint(equalTo: dequeueCell.topAnchor).isActive = true
+            collectionViewController.view.bottomAnchor.constraint(equalTo: dequeueCell.bottomAnchor).isActive = true
+            collectionViewController.view.widthAnchor.constraint(equalTo: dequeueCell.widthAnchor).isActive = true
+            collectionViewController.view.heightAnchor.constraint(equalTo: dequeueCell.heightAnchor).isActive = true
+            subTableViewController.subTableData = subTableData
+//            collectionViewController.dataSource = [subTableView]
             return dequeueCell
         }
     }
@@ -128,7 +132,7 @@ extension PictureAutoScrollViewController: UIScrollViewDelegate {
             scrollView.contentOffset = CGPoint(x: 0, y: bottomY)
             if canScroll {
                 canScroll = false
-                subTableView.canScroll = true
+                subTableViewController.canScroll = true
             }
         } else {
             if !canScroll {
