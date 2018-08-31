@@ -12,7 +12,8 @@
 		334E083A2136869D00432061 /* ZCWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334E08392136869D00432061 /* ZCWebViewController.swift */; };
 		334E083C21368B9200432061 /* BaseImageAutoScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334E083B21368B9200432061 /* BaseImageAutoScrollViewController.swift */; };
 		334E083E2136979800432061 /* PictureAutoSubTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334E083D2136979800432061 /* PictureAutoSubTableViewController.swift */; };
-		AA0729EB20E9FE2800C524C6 /* BaseScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0729EA20E9FE2800C524C6 /* BaseScrollViewController.swift */; };
+		334E086021391D4400432061 /* BaseMainScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334E085F21391D4300432061 /* BaseMainScrollViewController.swift */; };
+		334E086221391D9F00432061 /* BaseMainContainerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334E086121391D9F00432061 /* BaseMainContainerViewCell.swift */; };
 		AA072ADE20EF4C2D00C524C6 /* image0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AA072ADD20EF4C2D00C524C6 /* image0.jpg */; };
 		AA072AE220EF4D3E00C524C6 /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA072AE120EF4D3E00C524C6 /* VideoViewController.swift */; };
 		AA072AE720EF4FFC00C524C6 /* PictureAutoScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA072AE620EF4FFC00C524C6 /* PictureAutoScrollView.swift */; };
@@ -36,9 +37,10 @@
 		334E08392136869D00432061 /* ZCWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZCWebViewController.swift; sourceTree = "<group>"; };
 		334E083B21368B9200432061 /* BaseImageAutoScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseImageAutoScrollViewController.swift; sourceTree = "<group>"; };
 		334E083D2136979800432061 /* PictureAutoSubTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PictureAutoSubTableViewController.swift; sourceTree = "<group>"; };
+		334E085F21391D4300432061 /* BaseMainScrollViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMainScrollViewController.swift; sourceTree = "<group>"; };
+		334E086121391D9F00432061 /* BaseMainContainerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMainContainerViewCell.swift; sourceTree = "<group>"; };
 		3B8AE673B212ECCDC52916BD /* Pods-ScrollViewTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ScrollViewTest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ScrollViewTest/Pods-ScrollViewTest.debug.xcconfig"; sourceTree = "<group>"; };
 		5275B1AD81FC0BA22C55EABA /* Pods-ScrollViewTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ScrollViewTest.release.xcconfig"; path = "Pods/Target Support Files/Pods-ScrollViewTest/Pods-ScrollViewTest.release.xcconfig"; sourceTree = "<group>"; };
-		AA0729EA20E9FE2800C524C6 /* BaseScrollViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseScrollViewController.swift; sourceTree = "<group>"; };
 		AA072ADD20EF4C2D00C524C6 /* image0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = image0.jpg; sourceTree = "<group>"; };
 		AA072AE120EF4D3E00C524C6 /* VideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
 		AA072AE620EF4FFC00C524C6 /* PictureAutoScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureAutoScrollView.swift; sourceTree = "<group>"; };
@@ -91,7 +93,8 @@
 			isa = PBXGroup;
 			children = (
 				330B1CF02127CAC60095BE46 /* BaseCollectioViewController.swift */,
-				AA0729EA20E9FE2800C524C6 /* BaseScrollViewController.swift */,
+				334E085F21391D4300432061 /* BaseMainScrollViewController.swift */,
+				334E086121391D9F00432061 /* BaseMainContainerViewCell.swift */,
 				AACA18D820E9C2DB000399FE /* BaseTableView.swift */,
 				334E082D213680F500432061 /* BaseViewController.swift */,
 			);
@@ -292,16 +295,17 @@
 			files = (
 				334E083A2136869D00432061 /* ZCWebViewController.swift in Sources */,
 				334E083C21368B9200432061 /* BaseImageAutoScrollViewController.swift in Sources */,
+				334E086021391D4400432061 /* BaseMainScrollViewController.swift in Sources */,
 				AA072AE220EF4D3E00C524C6 /* VideoViewController.swift in Sources */,
 				AA83DF0D20DCCB0F00689412 /* main.m in Sources */,
 				330B1CF12127CAC60095BE46 /* BaseCollectioViewController.swift in Sources */,
 				334E082E213680F500432061 /* BaseViewController.swift in Sources */,
 				AA83DEFF20DCCB0D00689412 /* AppDelegate.m in Sources */,
 				AACA18D920E9C2DB000399FE /* BaseTableView.swift in Sources */,
+				334E086221391D9F00432061 /* BaseMainContainerViewCell.swift in Sources */,
 				334E083E2136979800432061 /* PictureAutoSubTableViewController.swift in Sources */,
 				AACA18E520E9F750000399FE /* StartViewController.swift in Sources */,
 				AA072AE720EF4FFC00C524C6 /* PictureAutoScrollView.swift in Sources */,
-				AA0729EB20E9FE2800C524C6 /* BaseScrollViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

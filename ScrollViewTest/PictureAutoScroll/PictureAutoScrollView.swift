@@ -1,6 +1,8 @@
 import Foundation
 
 class PictureAutoScrollView: UIView {
+    static let pictureAutoScrollViewNotification = Notification.Name("pictureAutoScrollViewNotification")
+
     private var images = [String]()
     private var currentIndex: Int = 0
     var duration: Double = 2.0
@@ -151,9 +153,9 @@ extension PictureAutoScrollView {
 }
 
 extension PictureAutoScrollView: UIScrollViewDelegate {
-    
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         invalidateTimer()
+        NotificationCenter.default.post(name: PictureAutoScrollView.pictureAutoScrollViewNotification, object: nil, userInfo: ["canScroll": "0"])
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
@@ -163,6 +165,8 @@ extension PictureAutoScrollView: UIScrollViewDelegate {
             refreshCurrentImageView()
         }
         initStartTImer()
+        
+        NotificationCenter.default.post(name: PictureAutoScrollView.pictureAutoScrollViewNotification, object: nil, userInfo: ["canScroll": "1"])
     }
     
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {

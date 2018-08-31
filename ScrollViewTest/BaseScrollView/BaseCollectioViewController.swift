@@ -82,7 +82,7 @@ extension BaseCollectioViewController: UIScrollViewDelegate {
         NotificationCenter.default.post(name: BaseCollectioViewController.baseCollectioViewControllerNotification, object: nil, userInfo: ["canScroll": "0"])
     }
     
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         NotificationCenter.default.post(name: BaseCollectioViewController.baseCollectioViewControllerNotification, object: nil, userInfo: ["canScroll": "1"])
     }
     

@@ -75,13 +75,13 @@ extension StartViewController: UITableViewDataSource {
         let row = indexPath.row
         switch row {
         case 0:
-            let viewController = BaseScrollViewController()
+            let viewController = BaseMainScrollViewController()
             viewController.title = tableViewContents[row]
             viewController.imageArray = [tableImageViews.first!]
             viewController.continerViewArray = tableContainerViews
             navigationController?.pushViewController(viewController, animated: true)
         case 2:
-            let viewController = BaseScrollViewController()
+            let viewController = BaseMainScrollViewController()
             viewController.title = tableViewContents[row]
             viewController.imageArray = tableImageViews
             viewController.continerViewArray = tableContainerViews

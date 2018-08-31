@@ -1,5 +1,5 @@
 import Foundation
-class BaseScrollViewController: UIViewController {
+class BaseMainScrollViewController: UIViewController {
     var imageArray = [String]()
     var continerViewArray = [UIViewController]()
     
@@ -9,10 +9,16 @@ class BaseScrollViewController: UIViewController {
     private var webViewHeight: CGFloat = 0
     private let imageViewHeight: CGFloat = 300
     
-    private var collectionViewController: BaseCollectioViewController = {
+    private lazy var collectionViewController: BaseCollectioViewController = {
         let viewController = BaseCollectioViewController()
         viewController.view.translatesAutoresizingMaskIntoConstraints = false
         return viewController
+    }()
+    
+    private lazy var baseMainContainerViewCell: BaseMainContainerViewCell = {
+        let view = BaseMainContainerViewCell(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     private lazy var imageAutoScrollViewController: BaseImageAutoScrollViewController = {
@@ -26,7 +32,7 @@ class BaseScrollViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: BaseScrollViewController.cellIdentifier)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: BaseMainScrollViewController.cellIdentifier)
         return tableView
     }()
     
@@ -42,7 +48,8 @@ class BaseScrollViewController: UIViewController {
         
         collectionViewController.superViewController = self
         NotificationCenter.default.addObserver(self, selector: #selector(changeStatusWithNotification(_:)), name: BaseViewController.BaseViewControllerToTop, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: BaseCollectioViewController.baseCollectioViewControllerNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: BaseMainContainerViewCell.baseMainContainerViewCellNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: PictureAutoScrollView.pictureAutoScrollViewNotification, object: nil)
     }
     
     @objc func changeStatusWithNotification(_ notification: Notification) {
@@ -56,7 +63,7 @@ class BaseScrollViewController: UIViewController {
     }
 }
 
-extension BaseScrollViewController: UITableViewDelegate {
+extension BaseMainScrollViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row == 0 {
             return imageViewHeight
@@ -65,13 +72,13 @@ extension BaseScrollViewController: UITableViewDelegate {
     }
 }
 
-extension BaseScrollViewController: UITableViewDataSource {
+extension BaseMainScrollViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: BaseScrollViewController.cellIdentifier, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: BaseMainScrollViewController.cellIdentifier, for: indexPath)
         if indexPath.row == 0 {
             cell.contentView.addSubview(imageAutoScrollViewController.view)
             imageAutoScrollViewController.view.topAnchor.constraint(equalTo: cell.contentView.topAnchor).isActive = true
@@ -80,35 +87,25 @@ extension BaseScrollViewController: UITableViewDataSource {
             imageAutoScrollViewController.view.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor).isActive = true
             imageAutoScrollViewController.images = imageArray
         } else {
-            cell.contentView.addSubview(collectionViewController.view)
-            collectionViewController.view.topAnchor.constraint(equalTo: cell.contentView.topAnchor).isActive = true
-            collectionViewController.view.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor).isActive = true
-            collectionViewController.view.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor).isActive = true
-            collectionViewController.view.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor).isActive = true
-            collectionViewController.dataSource = continerViewArray
+            cell.contentView.addSubview(baseMainContainerViewCell)
+            baseMainContainerViewCell.topAnchor.constraint(equalTo: cell.contentView.topAnchor).isActive = true
+            baseMainContainerViewCell.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor).isActive = true
+            baseMainContainerViewCell.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor).isActive = true
+            baseMainContainerViewCell.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor).isActive = true
+            baseMainContainerViewCell.dataSource = continerViewArray
         }
         return cell
     }
 }
 
-extension BaseScrollViewController: UIScrollViewDelegate {
-    
-//    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-//        if !canScroll {
-//            tableView.isScrollEnabled = false
-//        }
-//    }
-//
-//    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-//        tableView.isScrollEnabled = true
-//    }
+extension BaseMainScrollViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y >= imageViewHeight {
             scrollView.contentOffset = CGPoint(x: 0, y: imageViewHeight)
             if canScroll {
                 canScroll = false
-                collectionViewController.canScroll = true
+                baseMainContainerViewCell.canScroll = true
             }
         } else {
             if !canScroll {
