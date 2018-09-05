@@ -30,6 +30,11 @@ class BaseMainScrollViewController: UIViewController {
         return tableView
     }()
     
+    private lazy var segmentView: BaseSegmentView = {
+        let segmentView = BaseSegmentView(frame: .zero)
+        return segmentView
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -58,21 +63,36 @@ class BaseMainScrollViewController: UIViewController {
 
 extension BaseMainScrollViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == 0 {
+        if indexPath.section == 0 {
             return imageViewHeight
         }
         return webViewHeight
     }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 1 {
+            return 50
+        }
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0
+    }
 }
 
 extension BaseMainScrollViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 2
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: BaseMainScrollViewController.cellIdentifier, for: indexPath)
-        if indexPath.row == 0 {
+        if indexPath.section == 0, indexPath.row == 0 {
             cell.contentView.addSubview(imageAutoScrollViewController.view)
             imageAutoScrollViewController.view.topAnchor.constraint(equalTo: cell.contentView.topAnchor).isActive = true
             imageAutoScrollViewController.view.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor).isActive = true
@@ -88,6 +108,17 @@ extension BaseMainScrollViewController: UITableViewDataSource {
             baseMainContainerViewCell.dataSource = continerViewArray
         }
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 1 {
+            return segmentView
+        }
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return nil
     }
 }
 

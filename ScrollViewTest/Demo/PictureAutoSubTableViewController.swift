@@ -37,7 +37,6 @@ class PictureAutoSubTableViewController: BaseViewController {
     }
     
     private func fetchMoreData() {
-        NSLog(" ------- fetchMoreData()")
 
         DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + 2, execute: {
             var array = [String]()

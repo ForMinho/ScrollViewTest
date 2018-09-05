@@ -9,7 +9,7 @@
 import Foundation
 class BaseMainContainerViewCell: UIView {
     static let baseMainContainerViewCellNotification = Notification.Name("baseMainContainerViewCellNotification")
-    private var currentIndex: Int = 0
+    private(set) var currentIndex: Int = 0
     
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView(frame: .zero)
@@ -76,12 +76,6 @@ class BaseMainContainerViewCell: UIView {
     }
     
     private func refreshSubViewControllerScroll() {
-//        for viewController in dataSource {
-//            if let baseViewController = viewController as? BaseViewController {
-//                baseViewController.canScroll = canScroll
-//            }
-//        }
-        
         guard currentIndex < dataSource.count else { return }
         if let baseViewController = dataSource[currentIndex] as? BaseViewController {
             baseViewController.canScroll = canScroll

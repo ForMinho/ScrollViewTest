@@ -23,21 +23,6 @@ class BaseViewController: UIViewController {
 }
 
 extension BaseViewController: UIScrollViewDelegate {
-//    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-//        scrollView.alwaysBounceVertical = true
-//        NotificationCenter.default.post(name: BaseViewController.BaseViewControllerScrolled, object: nil, userInfo: ["canScroll": "0"])
-//    }
-//
-//    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-//        scrollView.alwaysBounceVertical = true
-//        NotificationCenter.default.post(name: BaseViewController.BaseViewControllerScrolled, object: nil, userInfo: ["canScroll": "1"])
-//    }
-    
-//    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-//        scrollView.alwaysBounceVertical = true
-//        NotificationCenter.default.post(name: BaseViewController.BaseViewControllerScrolled, object: nil, userInfo: ["canScroll": "1"])
-//    }
-    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if !canScroll {
             scrollView.contentOffset = .zero
