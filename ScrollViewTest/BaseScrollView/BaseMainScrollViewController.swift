@@ -9,12 +9,6 @@ class BaseMainScrollViewController: UIViewController {
     private var webViewHeight: CGFloat = 0
     private let imageViewHeight: CGFloat = 300
     
-    private lazy var collectionViewController: BaseCollectioViewController = {
-        let viewController = BaseCollectioViewController()
-        viewController.view.translatesAutoresizingMaskIntoConstraints = false
-        return viewController
-    }()
-    
     private lazy var baseMainContainerViewCell: BaseMainContainerViewCell = {
         let view = BaseMainContainerViewCell(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -46,7 +40,6 @@ class BaseMainScrollViewController: UIViewController {
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         
-        collectionViewController.superViewController = self
         NotificationCenter.default.addObserver(self, selector: #selector(changeStatusWithNotification(_:)), name: BaseViewController.BaseViewControllerToTop, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: BaseMainContainerViewCell.baseMainContainerViewCellNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: PictureAutoScrollView.pictureAutoScrollViewNotification, object: nil)
@@ -54,7 +47,7 @@ class BaseMainScrollViewController: UIViewController {
     
     @objc func changeStatusWithNotification(_ notification: Notification) {
         canScroll = true
-        collectionViewController.canScroll = false
+        baseMainContainerViewCell.canScroll = false
     }
     
     @objc func updateScrollView(_ notification: Notification) {

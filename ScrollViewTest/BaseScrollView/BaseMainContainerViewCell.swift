@@ -9,6 +9,7 @@
 import Foundation
 class BaseMainContainerViewCell: UIView {
     static let baseMainContainerViewCellNotification = Notification.Name("baseMainContainerViewCellNotification")
+    private var currentIndex: Int = 0
     
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView(frame: .zero)
@@ -75,12 +76,18 @@ class BaseMainContainerViewCell: UIView {
     }
     
     private func refreshSubViewControllerScroll() {
-        for viewController in dataSource {
-            if let baseViewController = viewController as? BaseViewController {
-                baseViewController.canScroll = canScroll
-            }
+//        for viewController in dataSource {
+//            if let baseViewController = viewController as? BaseViewController {
+//                baseViewController.canScroll = canScroll
+//            }
+//        }
+        
+        guard currentIndex < dataSource.count else { return }
+        if let baseViewController = dataSource[currentIndex] as? BaseViewController {
+            baseViewController.canScroll = canScroll
         }
     }
+    
     
     @objc func updateScrollView(_ notification: Notification) {
         guard case let info as String = notification.userInfo?["canScroll"] else { return }
@@ -92,12 +99,32 @@ class BaseMainContainerViewCell: UIView {
     }
 }
 
+extension BaseMainContainerViewCell {
+    private func refreshCurrentIndex() {
+        if scrollView.contentOffset.x >= scrollView.bounds.width * 0.5 {
+            currentIndex = currentIndex + 1
+        } else if scrollView.contentOffset.x <= scrollView.bounds.width * 0.5 {
+            currentIndex = currentIndex - 1
+        }
+        
+        if currentIndex < 0 {
+            currentIndex = 0
+        } else if currentIndex >= dataSource.count {
+            currentIndex = dataSource.count - 1
+        }
+    }
+}
+
 extension BaseMainContainerViewCell: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         NotificationCenter.default.post(name: BaseMainContainerViewCell.baseMainContainerViewCellNotification, object: nil, userInfo: ["canScroll": "0"])
     }
     
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool)  {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView)   {
         NotificationCenter.default.post(name: BaseMainContainerViewCell.baseMainContainerViewCellNotification, object: nil, userInfo: ["canScroll": "1"])
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        refreshCurrentIndex()
     }
 }

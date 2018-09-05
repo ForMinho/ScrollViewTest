@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		330B1CF12127CAC60095BE46 /* BaseCollectioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330B1CF02127CAC60095BE46 /* BaseCollectioViewController.swift */; };
 		334E082E213680F500432061 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334E082D213680F500432061 /* BaseViewController.swift */; };
 		334E083A2136869D00432061 /* ZCWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334E08392136869D00432061 /* ZCWebViewController.swift */; };
 		334E083C21368B9200432061 /* BaseImageAutoScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334E083B21368B9200432061 /* BaseImageAutoScrollViewController.swift */; };
@@ -32,7 +31,6 @@
 
 /* Begin PBXFileReference section */
 		22508274AD0886F2A2AF41F2 /* libPods-ScrollViewTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ScrollViewTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		330B1CF02127CAC60095BE46 /* BaseCollectioViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCollectioViewController.swift; sourceTree = "<group>"; };
 		334E082D213680F500432061 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		334E08392136869D00432061 /* ZCWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZCWebViewController.swift; sourceTree = "<group>"; };
 		334E083B21368B9200432061 /* BaseImageAutoScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseImageAutoScrollViewController.swift; sourceTree = "<group>"; };
@@ -72,6 +70,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3308953E213FAF4E00764DB3 /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				AA072ADD20EF4C2D00C524C6 /* image0.jpg */,
+				AA57976020F3677600BA58E0 /* image1.jpg */,
+				AA57976120F3677600BA58E0 /* image2.jpg */,
+				AA57976220F3677600BA58E0 /* image3.jpg */,
+			);
+			path = Image;
+			sourceTree = "<group>";
+		};
+		3308953F213FAF7400764DB3 /* StoryBoard */ = {
+			isa = PBXGroup;
+			children = (
+				AA83DF0820DCCB0F00689412 /* LaunchScreen.storyboard */,
+				AA83DF0320DCCB0D00689412 /* Main.storyboard */,
+			);
+			path = StoryBoard;
+			sourceTree = "<group>";
+		};
+		33089540213FAFA200764DB3 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				334E08392136869D00432061 /* ZCWebViewController.swift */,
+				334E083D2136979800432061 /* PictureAutoSubTableViewController.swift */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
 		39756FC91396F6540989A295 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -92,7 +119,6 @@
 		AA0729F320EA045600C524C6 /* BaseScrollView */ = {
 			isa = PBXGroup;
 			children = (
-				330B1CF02127CAC60095BE46 /* BaseCollectioViewController.swift */,
 				334E085F21391D4300432061 /* BaseMainScrollViewController.swift */,
 				334E086121391D9F00432061 /* BaseMainContainerViewCell.swift */,
 				AACA18D820E9C2DB000399FE /* BaseTableView.swift */,
@@ -104,13 +130,9 @@
 		AA0729F420EA049000C524C6 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				3308953F213FAF7400764DB3 /* StoryBoard */,
+				3308953E213FAF4E00764DB3 /* Image */,
 				AA83DF0B20DCCB0F00689412 /* Info.plist */,
-				AA072ADD20EF4C2D00C524C6 /* image0.jpg */,
-				AA57976020F3677600BA58E0 /* image1.jpg */,
-				AA57976120F3677600BA58E0 /* image2.jpg */,
-				AA57976220F3677600BA58E0 /* image3.jpg */,
-				AA83DF0820DCCB0F00689412 /* LaunchScreen.storyboard */,
-				AA83DF0320DCCB0D00689412 /* Main.storyboard */,
 				AA83DF0620DCCB0F00689412 /* Assets.xcassets */,
 			);
 			path = Resource;
@@ -163,16 +185,15 @@
 		AA83DEFC20DCCB0D00689412 /* ScrollViewTest */ = {
 			isa = PBXGroup;
 			children = (
-				AA072AE320EF4FA400C524C6 /* PictureAutoScroll */,
 				AA0729F520EA04DB00C524C6 /* Appdelegate */,
 				AA0729F320EA045600C524C6 /* BaseScrollView */,
+				33089540213FAFA200764DB3 /* Demo */,
 				AA83DF0C20DCCB0F00689412 /* main.m */,
+				AA072AE320EF4FA400C524C6 /* PictureAutoScroll */,
 				AA0729F420EA049000C524C6 /* Resource */,
 				AA83DF1320DCCB6500689412 /* ScrollViewTest-Bridging-Header.h */,
 				AACA18E420E9F750000399FE /* StartViewController.swift */,
 				AA072AE020EF4D1500C524C6 /* VideoScrollView */,
-				334E08392136869D00432061 /* ZCWebViewController.swift */,
-				334E083D2136979800432061 /* PictureAutoSubTableViewController.swift */,
 			);
 			path = ScrollViewTest;
 			sourceTree = "<group>";
@@ -298,7 +319,6 @@
 				334E086021391D4400432061 /* BaseMainScrollViewController.swift in Sources */,
 				AA072AE220EF4D3E00C524C6 /* VideoViewController.swift in Sources */,
 				AA83DF0D20DCCB0F00689412 /* main.m in Sources */,
-				330B1CF12127CAC60095BE46 /* BaseCollectioViewController.swift in Sources */,
 				334E082E213680F500432061 /* BaseViewController.swift in Sources */,
 				AA83DEFF20DCCB0D00689412 /* AppDelegate.m in Sources */,
 				AACA18D920E9C2DB000399FE /* BaseTableView.swift in Sources */,

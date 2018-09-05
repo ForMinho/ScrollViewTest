@@ -17,8 +17,8 @@ class PictureAutoSubTableViewController: BaseViewController {
         })
     }()
     
-    private(set) lazy var tableView: BaseTableView = {
-        let tableView = BaseTableView(frame: .zero, style: .plain)
+    private(set) lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
