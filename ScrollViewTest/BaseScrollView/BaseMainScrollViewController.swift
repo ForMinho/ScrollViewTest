@@ -1,7 +1,13 @@
 import Foundation
 class BaseMainScrollViewController: UIViewController {
     var imageArray = [String]()
-    var continerViewArray = [UIViewController]()
+    var continerViewArray = [UIViewController]() {
+        didSet {
+            refreshContainerViewNames()
+        }
+    }
+    
+    private var containerViewNames = [String]()
     
     static let cellIdentifier = "CellIdentifier"
     var canScroll: Bool = true
@@ -32,6 +38,7 @@ class BaseMainScrollViewController: UIViewController {
     
     private lazy var segmentView: BaseSegmentView = {
         let segmentView = BaseSegmentView(frame: .zero)
+        
         return segmentView
     }()
     
@@ -58,6 +65,16 @@ class BaseMainScrollViewController: UIViewController {
     @objc func updateScrollView(_ notification: Notification) {
         guard case let info as String = notification.userInfo?["canScroll"] else { return }
         tableView.isScrollEnabled = info == "1" ? true : false
+    }
+    
+    private func refreshContainerViewNames() {
+        var array = [String]()
+        for viewController in continerViewArray {
+            if let title = viewController.title {
+                array.append(title)
+            }
+        }
+        containerViewNames = array
     }
 }
 
@@ -112,6 +129,7 @@ extension BaseMainScrollViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 1 {
+            segmentView.updateSegmentView(withDataSource: containerViewNames)
             return segmentView
         }
         return nil

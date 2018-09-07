@@ -76,9 +76,15 @@ class BaseMainContainerViewCell: UIView {
     }
     
     private func refreshSubViewControllerScroll() {
-        guard currentIndex < dataSource.count else { return }
-        if let baseViewController = dataSource[currentIndex] as? BaseViewController {
-            baseViewController.canScroll = canScroll
+//        guard currentIndex < dataSource.count else { return }
+//        if let baseViewController = dataSource[currentIndex] as? BaseViewController {
+//            baseViewController.canScroll = canScroll
+//        }
+        
+        for viewController in dataSource {
+            if let baseViewController = viewController as? BaseViewController {
+                baseViewController.canScroll = canScroll
+            }
         }
     }
     
@@ -95,7 +101,7 @@ class BaseMainContainerViewCell: UIView {
 
 extension BaseMainContainerViewCell {
     private func refreshCurrentIndex() {
-        if scrollView.contentOffset.x >= scrollView.bounds.width * 0.5 {
+        if scrollView.contentOffset.x >= scrollView.bounds.width * 2 {
             currentIndex = currentIndex + 1
         } else if scrollView.contentOffset.x <= scrollView.bounds.width * 0.5 {
             currentIndex = currentIndex - 1
@@ -115,10 +121,12 @@ extension BaseMainContainerViewCell: UIScrollViewDelegate {
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView)   {
+        refreshCurrentIndex()
         NotificationCenter.default.post(name: BaseMainContainerViewCell.baseMainContainerViewCellNotification, object: nil, userInfo: ["canScroll": "1"])
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         refreshCurrentIndex()
     }
+    
 }

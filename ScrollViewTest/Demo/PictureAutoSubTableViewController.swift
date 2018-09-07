@@ -23,7 +23,7 @@ class PictureAutoSubTableViewController: BaseViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.tableCellIdentifier)
-        tableView.tableFooterView = footView
+//        tableView.tableFooterView = footView
         return tableView
     }()
     

@@ -14,16 +14,18 @@ protocol BaseSegmentViewDelegate: class {
 
 class BaseSegmentView: UIView {
     private struct Constants {
-        static let titleButtonWidth: CGFloat = 50
+        static let titleButtonWidth: CGFloat = 300
     }
     
     private(set) var currentIndex: Int = 0
     
-    private var dataSource = [String]()
+    var dataSource = [String]()
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.delegate = self
+        view.isPagingEnabled = true
+        view.showsHorizontalScrollIndicator = false
         return view
     }()
     

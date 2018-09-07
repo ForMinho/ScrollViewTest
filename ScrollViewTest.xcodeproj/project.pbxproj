@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		33089542213FB0D000764DB3 /* BaseCollectioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33089541213FB0D000764DB3 /* BaseCollectioViewController.swift */; };
+		33089542213FB0D000764DB3 /* ZCCollectioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33089541213FB0D000764DB3 /* ZCCollectioViewController.swift */; };
 		33089544213FB12300764DB3 /* BaseSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33089543213FB12300764DB3 /* BaseSegmentView.swift */; };
 		334E082E213680F500432061 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334E082D213680F500432061 /* BaseViewController.swift */; };
 		334E083A2136869D00432061 /* ZCWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334E08392136869D00432061 /* ZCWebViewController.swift */; };
@@ -33,7 +33,7 @@
 
 /* Begin PBXFileReference section */
 		22508274AD0886F2A2AF41F2 /* libPods-ScrollViewTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ScrollViewTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		33089541213FB0D000764DB3 /* BaseCollectioViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseCollectioViewController.swift; path = ScrollViewTest/BaseScrollView/BaseCollectioViewController.swift; sourceTree = SOURCE_ROOT; };
+		33089541213FB0D000764DB3 /* ZCCollectioViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ZCCollectioViewController.swift; path = ScrollViewTest/BaseScrollView/ZCCollectioViewController.swift; sourceTree = SOURCE_ROOT; };
 		33089543213FB12300764DB3 /* BaseSegmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSegmentView.swift; sourceTree = "<group>"; };
 		334E082D213680F500432061 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		334E08392136869D00432061 /* ZCWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZCWebViewController.swift; sourceTree = "<group>"; };
@@ -97,7 +97,7 @@
 		33089540213FAFA200764DB3 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
-				33089541213FB0D000764DB3 /* BaseCollectioViewController.swift */,
+				33089541213FB0D000764DB3 /* ZCCollectioViewController.swift */,
 				334E083D2136979800432061 /* PictureAutoSubTableViewController.swift */,
 				334E08392136869D00432061 /* ZCWebViewController.swift */,
 			);
@@ -329,7 +329,7 @@
 				334E082E213680F500432061 /* BaseViewController.swift in Sources */,
 				AA83DEFF20DCCB0D00689412 /* AppDelegate.m in Sources */,
 				AACA18D920E9C2DB000399FE /* BaseTableView.swift in Sources */,
-				33089542213FB0D000764DB3 /* BaseCollectioViewController.swift in Sources */,
+				33089542213FB0D000764DB3 /* ZCCollectioViewController.swift in Sources */,
 				334E086221391D9F00432061 /* BaseMainContainerViewCell.swift in Sources */,
 				334E083E2136979800432061 /* PictureAutoSubTableViewController.swift in Sources */,
 				AACA18E520E9F750000399FE /* StartViewController.swift in Sources */,

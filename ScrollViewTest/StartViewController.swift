@@ -27,18 +27,28 @@ class StartViewController: UIViewController {
     private lazy var webViewController: ZCWebViewController = {
         let viewController = ZCWebViewController(nibName: nil, bundle: nil)
         viewController.view.translatesAutoresizingMaskIntoConstraints = false
+        viewController.title = "webView"
         return viewController
     }()
     
     private lazy var picAutoViewController: PictureAutoSubTableViewController = {
         let viewController = PictureAutoSubTableViewController(nibName: nil, bundle: nil)
+        viewController.title = "picView"
         viewController.view.translatesAutoresizingMaskIntoConstraints = false
-        viewController.subTableData = ["1", "2", "3", "34", "56"]
+        viewController.subTableData = ["1", "2", "3", "34", "56", "12", "2", "56", "45", "78", "23300", "0000", "1", "2", "3", "34", "56", "1", "2", "3", "34", "56", "1", "2", "3", "34", "56", "1", "2", "3", "34", "56", "1", "2", "3", "34", "56", "1", "2", "3", "34", "56"]
         return viewController
     }()
     
+    private lazy var collectionViewController: ZCCollectioViewController = {
+        let collectionViewController = ZCCollectioViewController(nibName: nil, bundle: nil)
+        collectionViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        collectionViewController.title = "collectionView"
+        collectionViewController.dataSource = ["12", "2", "56", "45", "78", "23300", "0000", "1", "2", "3", "34", "56", "1", "2", "3", "34", "56", "1", "2", "3", "34", "56", "1", "2", "3", "34", "56", "1", "2", "3", "34", "56", "1", "2", "3", "34", "56"]
+        return collectionViewController
+    }()
+    
     private lazy var tableContainerViews: [UIViewController] = {
-        return [webViewController, picAutoViewController]
+        return [collectionViewController, picAutoViewController, webViewController]
     }()
     
     override func viewDidLoad() {
@@ -78,7 +88,7 @@ extension StartViewController: UITableViewDataSource {
             let viewController = BaseMainScrollViewController()
             viewController.title = tableViewContents[row]
             viewController.imageArray = [tableImageViews.first!]
-            viewController.continerViewArray = tableContainerViews
+            viewController.continerViewArray = [tableContainerViews.first!]
             navigationController?.pushViewController(viewController, animated: true)
         case 2:
             let viewController = BaseMainScrollViewController()

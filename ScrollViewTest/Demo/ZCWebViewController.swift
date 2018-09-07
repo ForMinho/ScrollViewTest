@@ -20,7 +20,7 @@ class ZCWebViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         webView.load(URLRequest(url: URL(string: "https://github.com/indulgeIn/YBMultistageScrollView")!))
-        setupView()
+//        setupView()
     }
     
     override func setupView() {
