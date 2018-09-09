@@ -18,6 +18,7 @@ class BaseMainScrollViewController: UIViewController {
     private lazy var baseMainContainerViewCell: BaseMainContainerViewCell = {
         let view = BaseMainContainerViewCell(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.delegate = self
         return view
     }()
     
@@ -38,7 +39,8 @@ class BaseMainScrollViewController: UIViewController {
     
     private lazy var segmentView: BaseSegmentView = {
         let segmentView = BaseSegmentView(frame: .zero)
-        
+//        segmentView.translatesAutoresizingMaskIntoConstraints = false
+        segmentView.delegate = self
         return segmentView
     }()
     
@@ -55,6 +57,7 @@ class BaseMainScrollViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(changeStatusWithNotification(_:)), name: BaseViewController.BaseViewControllerToTop, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: BaseMainContainerViewCell.baseMainContainerViewCellNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: PictureAutoScrollView.pictureAutoScrollViewNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: BaseSegmentView.baseSegmentViewScrolledNotification, object: nil)
     }
     
     @objc func changeStatusWithNotification(_ notification: Notification) {
@@ -111,10 +114,10 @@ extension BaseMainScrollViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: BaseMainScrollViewController.cellIdentifier, for: indexPath)
         if indexPath.section == 0, indexPath.row == 0 {
             cell.contentView.addSubview(imageAutoScrollViewController.view)
-            imageAutoScrollViewController.view.topAnchor.constraint(equalTo: cell.contentView.topAnchor).isActive = true
-            imageAutoScrollViewController.view.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor).isActive = true
-            imageAutoScrollViewController.view.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor).isActive = true
-            imageAutoScrollViewController.view.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor).isActive = true
+            imageAutoScrollViewController.view.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
+            imageAutoScrollViewController.view.leadingAnchor.constraint(equalTo: cell.leadingAnchor).isActive = true
+            imageAutoScrollViewController.view.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
+            imageAutoScrollViewController.view.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
             imageAutoScrollViewController.images = imageArray
         } else {
             cell.contentView.addSubview(baseMainContainerViewCell)
@@ -129,7 +132,9 @@ extension BaseMainScrollViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 1 {
+            segmentView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
             segmentView.updateSegmentView(withDataSource: containerViewNames)
+        
             return segmentView
         }
         return nil
@@ -143,18 +148,31 @@ extension BaseMainScrollViewController: UITableViewDataSource {
 extension BaseMainScrollViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y >= imageViewHeight {
-            scrollView.contentOffset = CGPoint(x: 0, y: imageViewHeight)
+        let commonScrollHeight = imageViewHeight//tableView.rectForHeader(inSection: 1).maxY
+        if scrollView.contentOffset.y >= commonScrollHeight {
+            scrollView.contentOffset = CGPoint(x: 0, y: commonScrollHeight)
             if canScroll {
                 canScroll = false
                 baseMainContainerViewCell.canScroll = true
             }
         } else {
             if !canScroll {
-                scrollView.contentOffset = CGPoint(x: 0, y: imageViewHeight)
+                scrollView.contentOffset = CGPoint(x: 0, y: commonScrollHeight)
             }
         }
         scrollView.showsVerticalScrollIndicator = canScroll ? true : false
     }
 }
 
+
+extension BaseMainScrollViewController: BaseMainContainerViewCellDelegate {
+    func baseMainContainerViewCellCurrentIndexChanged(_ view: BaseMainContainerViewCell, currentIndex: Int) {
+        segmentView.currentPageChanged(withCurrentInde: currentIndex)
+    }
+}
+
+extension BaseMainScrollViewController: BaseSegmentViewDelegate {
+    func baseSegmentViewDidSelectedSegment(_ baseSegmentView: BaseSegmentView, selectedIndex: Int) {
+        baseMainContainerViewCell.updateCurrentSelectedView(withCurrentIndex: selectedIndex)
+    }
+}

@@ -24,6 +24,7 @@ class BaseViewController: UIViewController {
 
 extension BaseViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        NSLog("scrollView == \(self)")
         if !canScroll {
             scrollView.contentOffset = .zero
         }

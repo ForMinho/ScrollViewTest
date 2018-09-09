@@ -13,86 +13,173 @@ protocol BaseSegmentViewDelegate: class {
 }
 
 class BaseSegmentView: UIView {
+    static let baseSegmentViewScrolledNotification = Notification.Name("baseSegmentViewScrolledNotification")
     private struct Constants {
-        static let titleButtonWidth: CGFloat = 300
+        static let titleButtonWidth: CGFloat = 150
     }
     
-    private(set) var currentIndex: Int = 0
+    private(set) var currentIndex: Int = 0 {
+        didSet {
+            guard currentIndex != oldValue else { return }
+            scrollView.scrollRectToVisible(CGRect(x: Constants.titleButtonWidth * CGFloat(currentIndex), y: 0, width: Constants.titleButtonWidth, height: scrollView.frame.width), animated: true)
+        }
+    }
     
+    weak var delegate: BaseSegmentViewDelegate?
     var dataSource = [String]()
+    private lazy var buttonsArray = [UIButton]()
+    
+    private lazy var underLineView: UIView = {
+        let view = UIView(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .red
+        return view
+    }()
+    
+    private lazy var underLineLeadingAnchor: NSLayoutConstraint = {
+        return underLineView.leadingAnchor.constraint(equalTo: self.leadingAnchor)
+    }()
+    
+    private lazy var underLineViewTrailingAnchor: NSLayoutConstraint = {
+       return underLineView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+    }()
+    
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView(frame: .zero)
+        view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
         view.delegate = self
-        view.isPagingEnabled = true
         view.showsHorizontalScrollIndicator = false
+        return view
+    }()
+    
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(frame: .zero)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.spacing = 2
+        stackView.distribution = .equalSpacing
+        stackView.alignment = .center
+        stackView.isLayoutMarginsRelativeArrangement = true
+        return stackView
+    }()
+    
+    private lazy var topDividerView: UIView = {
+        let view = UIView(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
+        return view
+    }()
+    
+    private lazy var bottomDividerView: UIView = {
+        let view = UIView(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
         return view
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
+       
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func currentPageChanged(withCurrentInde index: Int) {
+        guard index < dataSource.count else { return }
+        currentIndex = index
+        resetAllButtons()
+        let button = buttonsArray[index]
+        button.isSelected = true
+    }
+    
+    func updateSegmentView(withDataSource source: [String]) {
+        guard source.count > 0 else { return }
+        dataSource = source
+        for title in dataSource {
+            createTitleButton(title)
+        }
+        currentPageChanged(withCurrentInde: currentIndex)
+    }
+}
+
+extension BaseSegmentView {
     private func setupViews() {
-        backgroundColor = .red
-        
+        addSubview(topDividerView)
         addSubview(scrollView)
+        scrollView.addSubview(stackView)
+        addSubview(bottomDividerView)
+        topDividerView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        topDividerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        topDividerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        topDividerView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
         scrollView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         scrollView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         scrollView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
-        scrollView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
+        scrollView.heightAnchor.constraint(equalTo: heightAnchor, constant: -2).isActive = true
+        
+        stackView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
+        
+        bottomDividerView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        bottomDividerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        bottomDividerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        bottomDividerView.heightAnchor.constraint(equalToConstant: 1).isActive = true
     }
     
-    func updateSegmentView(withDataSource dataSource: [String]) {
-        guard dataSource.count > 0 else { return }
-        var preTitleButton: UIButton?
-        var currentTitleButton = UIButton()
-        for title in dataSource {
-            currentTitleButton = createTitleButton(title)
-            if let preTitleButton = preTitleButton {
-                currentTitleButton.leadingAnchor.constraint(equalTo: preTitleButton.trailingAnchor).isActive = true
-            } else {
-                currentTitleButton.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor).isActive = true
-            }
-            preTitleButton = currentTitleButton
-        }
-        currentTitleButton.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).isActive = true
-    }
-    
-    private func createTitleButton(_ title: String) -> UIButton {
+    private func createTitleButton(_ title: String) {
         let titleButton = UIButton(type: .custom)
         titleButton.translatesAutoresizingMaskIntoConstraints = false
         titleButton.setTitle(title, for: .normal)
         titleButton.setTitleColor(.black, for: .normal)
         titleButton.setTitleColor(.red, for: .selected)
         titleButton.addTarget(self, action: #selector(titleButtonPressed(_:)), for: .touchUpInside)
-        scrollView.addSubview(titleButton)
+        stackView.addArrangedSubview(titleButton)
         
-        titleButton.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+        //frame
         titleButton.heightAnchor.constraint(equalTo: scrollView.heightAnchor).isActive = true
         titleButton.widthAnchor.constraint(equalToConstant: Constants.titleButtonWidth).isActive = true
-        titleButton.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
         
-        return titleButton
+        buttonsArray.append(titleButton)
     }
     
     @objc private func titleButtonPressed(_ sender: UIButton) {
-        
+        resetAllButtons()
+        currentIndex = findTitleButtonInde(sender) ?? 0
+        sender.isSelected = true
+        delegate?.baseSegmentViewDidSelectedSegment(self, selectedIndex: currentIndex)
+    }
+    
+    private func resetAllButtons() {
+        for button in buttonsArray {
+            button.isSelected = false
+        }
+    }
+    
+    private func findTitleButtonInde(_ button: UIButton) -> Int? {
+        var index: Int?
+        index = buttonsArray.index(where: {$0 == button})
+        return index
     }
 }
 
 extension BaseSegmentView: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        
+        NotificationCenter.default.post(name: BaseSegmentView.baseSegmentViewScrolledNotification, object: nil, userInfo: ["canScroll": "0"])
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        
+        NotificationCenter.default.post(name: BaseSegmentView.baseSegmentViewScrolledNotification, object: nil, userInfo: ["canScroll": "1"])
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        NotificationCenter.default.post(name: BaseSegmentView.baseSegmentViewScrolledNotification, object: nil, userInfo: ["canScroll": "1"])
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

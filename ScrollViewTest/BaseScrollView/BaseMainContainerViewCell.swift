@@ -7,9 +7,22 @@
 //
 
 import Foundation
+protocol BaseMainContainerViewCellDelegate: class {
+    func baseMainContainerViewCellCurrentIndexChanged(_ view: BaseMainContainerViewCell, currentIndex: Int)
+}
+
 class BaseMainContainerViewCell: UIView {
     static let baseMainContainerViewCellNotification = Notification.Name("baseMainContainerViewCellNotification")
-    private(set) var currentIndex: Int = 0
+    weak var delegate: BaseMainContainerViewCellDelegate?
+    
+    private var lastPosition: CGFloat = 0
+    
+    private(set) var currentIndex: Int = 0 {
+        didSet {
+            guard currentIndex != oldValue else { return }
+            delegate?.baseMainContainerViewCellCurrentIndexChanged(self, currentIndex: currentIndex)
+        }
+    }
     
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView(frame: .zero)
@@ -44,6 +57,13 @@ class BaseMainContainerViewCell: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func updateCurrentSelectedView(withCurrentIndex index: Int) {
+        currentIndex = index
+        scrollView.scrollRectToVisible(CGRect(x: frame.width * CGFloat(currentIndex), y: 0, width: frame.width, height: frame.height), animated: true)
+    }
+}
+
+extension BaseMainContainerViewCell {
     private func setupViews() {
         addSubview(scrollView)
         scrollView.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -76,11 +96,6 @@ class BaseMainContainerViewCell: UIView {
     }
     
     private func refreshSubViewControllerScroll() {
-//        guard currentIndex < dataSource.count else { return }
-//        if let baseViewController = dataSource[currentIndex] as? BaseViewController {
-//            baseViewController.canScroll = canScroll
-//        }
-        
         for viewController in dataSource {
             if let baseViewController = viewController as? BaseViewController {
                 baseViewController.canScroll = canScroll
@@ -88,30 +103,20 @@ class BaseMainContainerViewCell: UIView {
         }
     }
     
+    private func refreshCurrentIndex() {
+        var index = Int(floor((scrollView.contentOffset.x - scrollView.bounds.width / 2) / scrollView.bounds.width) + 1)
+        
+        if index < 0 {
+            index = 0
+        } else if index >= dataSource.count {
+            index = dataSource.count - 1
+        }
+        currentIndex = index
+    }
     
     @objc func updateScrollView(_ notification: Notification) {
         guard case let info as String = notification.userInfo?["canScroll"] else { return }
         scrollView.isScrollEnabled = info == "1" ? true : false
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-}
-
-extension BaseMainContainerViewCell {
-    private func refreshCurrentIndex() {
-        if scrollView.contentOffset.x >= scrollView.bounds.width * 2 {
-            currentIndex = currentIndex + 1
-        } else if scrollView.contentOffset.x <= scrollView.bounds.width * 0.5 {
-            currentIndex = currentIndex - 1
-        }
-        
-        if currentIndex < 0 {
-            currentIndex = 0
-        } else if currentIndex >= dataSource.count {
-            currentIndex = dataSource.count - 1
-        }
     }
 }
 
