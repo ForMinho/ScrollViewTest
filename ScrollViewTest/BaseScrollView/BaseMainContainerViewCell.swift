@@ -7,22 +7,25 @@
 //
 
 import Foundation
-protocol BaseMainContainerViewCellDelegate: class {
-    func baseMainContainerViewCellCurrentIndexChanged(_ view: BaseMainContainerViewCell, currentIndex: Int)
-}
 
 class BaseMainContainerViewCell: UIView {
     static let baseMainContainerViewCellNotification = Notification.Name("baseMainContainerViewCellNotification")
-    weak var delegate: BaseMainContainerViewCellDelegate?
     
     private var lastPosition: CGFloat = 0
     
     private(set) var currentIndex: Int = 0 {
         didSet {
             guard currentIndex != oldValue else { return }
-            delegate?.baseMainContainerViewCellCurrentIndexChanged(self, currentIndex: currentIndex)
+            segmentView.currentPageChanged(withCurrentInde: currentIndex)
         }
     }
+    
+    private lazy var segmentView: BaseSegmentView = {
+        let view = BaseSegmentView(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.delegate = self
+        return view
+    }()
     
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView(frame: .zero)
@@ -38,6 +41,12 @@ class BaseMainContainerViewCell: UIView {
     var dataSource = [UIViewController]() {
         didSet {
             updateContainerView()
+        }
+    }
+    
+    var containerViewNames = [String]() {
+        didSet {
+            segmentView.updateSegmentView(withDataSource: containerViewNames)
         }
     }
     
@@ -65,9 +74,15 @@ class BaseMainContainerViewCell: UIView {
 
 extension BaseMainContainerViewCell {
     private func setupViews() {
+        addSubview(segmentView)
+        segmentView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        segmentView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        segmentView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        segmentView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
         addSubview(scrollView)
-        scrollView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        scrollView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        scrollView.topAnchor.constraint(equalTo: segmentView.bottomAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
@@ -133,5 +148,10 @@ extension BaseMainContainerViewCell: UIScrollViewDelegate {
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         refreshCurrentIndex()
     }
-    
+}
+
+extension BaseMainContainerViewCell: BaseSegmentViewDelegate {
+    func baseSegmentViewDidSelectedSegment(_ baseSegmentView: BaseSegmentView, selectedIndex: Int) {
+        updateCurrentSelectedView(withCurrentIndex: selectedIndex)
+    }
 }

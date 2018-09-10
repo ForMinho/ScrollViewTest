@@ -18,7 +18,6 @@ class BaseMainScrollViewController: UIViewController {
     private lazy var baseMainContainerViewCell: BaseMainContainerViewCell = {
         let view = BaseMainContainerViewCell(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.delegate = self
         return view
     }()
     
@@ -37,27 +36,31 @@ class BaseMainScrollViewController: UIViewController {
         return tableView
     }()
     
-    private lazy var segmentView: BaseSegmentView = {
-        let segmentView = BaseSegmentView(frame: .zero)
-//        segmentView.translatesAutoresizingMaskIntoConstraints = false
-        segmentView.delegate = self
-        return segmentView
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        webViewHeight = view.frame.height
+        webViewHeight = view.safeAreaLayoutGuide.layoutFrame.height
         view.addSubview(tableView)
-        tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         
         NotificationCenter.default.addObserver(self, selector: #selector(changeStatusWithNotification(_:)), name: BaseViewController.BaseViewControllerToTop, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: BaseMainContainerViewCell.baseMainContainerViewCellNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: PictureAutoScrollView.pictureAutoScrollViewNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: BaseSegmentView.baseSegmentViewScrolledNotification, object: nil)
+        
+//        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+//            appDelegate.allowRotation = false
+//        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            appDelegate.allowRotation = true
+        }
     }
     
     @objc func changeStatusWithNotification(_ notification: Notification) {
@@ -83,36 +86,25 @@ class BaseMainScrollViewController: UIViewController {
 
 extension BaseMainScrollViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0 {
+        if indexPath.row == 0 {
             return imageViewHeight
         }
-        return webViewHeight
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 1 {
-            return 50
-        }
-        return 0
-    }
-    
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 0
+        return tableView.frame.height
     }
 }
 
 extension BaseMainScrollViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: BaseMainScrollViewController.cellIdentifier, for: indexPath)
-        if indexPath.section == 0, indexPath.row == 0 {
+        if indexPath.row == 0 {
             cell.contentView.addSubview(imageAutoScrollViewController.view)
             imageAutoScrollViewController.view.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
             imageAutoScrollViewController.view.leadingAnchor.constraint(equalTo: cell.leadingAnchor).isActive = true
@@ -126,22 +118,9 @@ extension BaseMainScrollViewController: UITableViewDataSource {
             baseMainContainerViewCell.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor).isActive = true
             baseMainContainerViewCell.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor).isActive = true
             baseMainContainerViewCell.dataSource = continerViewArray
+            baseMainContainerViewCell.containerViewNames = containerViewNames
         }
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if section == 1 {
-            segmentView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
-            segmentView.updateSegmentView(withDataSource: containerViewNames)
-        
-            return segmentView
-        }
-        return nil
-    }
-    
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        return nil
     }
 }
 
@@ -161,18 +140,5 @@ extension BaseMainScrollViewController: UIScrollViewDelegate {
             }
         }
         scrollView.showsVerticalScrollIndicator = canScroll ? true : false
-    }
-}
-
-
-extension BaseMainScrollViewController: BaseMainContainerViewCellDelegate {
-    func baseMainContainerViewCellCurrentIndexChanged(_ view: BaseMainContainerViewCell, currentIndex: Int) {
-        segmentView.currentPageChanged(withCurrentInde: currentIndex)
-    }
-}
-
-extension BaseMainScrollViewController: BaseSegmentViewDelegate {
-    func baseSegmentViewDidSelectedSegment(_ baseSegmentView: BaseSegmentView, selectedIndex: Int) {
-        baseMainContainerViewCell.updateCurrentSelectedView(withCurrentIndex: selectedIndex)
     }
 }
