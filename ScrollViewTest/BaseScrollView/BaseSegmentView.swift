@@ -18,10 +18,11 @@ class BaseSegmentView: UIView {
         static let titleButtonWidth: CGFloat = 150
     }
     
-    private(set) var currentIndex: Int = 0 {
+    private(set) var currentIndex: Int = 0
+    {
         didSet {
             guard currentIndex != oldValue else { return }
-            scrollView.scrollRectToVisible(CGRect(x: Constants.titleButtonWidth * CGFloat(currentIndex), y: 0, width: Constants.titleButtonWidth, height: scrollView.frame.width), animated: true)
+            updateSegmentViewAfterCurrentIndexChanged()
         }
     }
     
@@ -29,19 +30,15 @@ class BaseSegmentView: UIView {
     var dataSource = [String]()
     private lazy var buttonsArray = [UIButton]()
     
-    private lazy var underLineView: UIView = {
+    private lazy var selectedUnderLineView: UIView = {
         let view = UIView(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .red
         return view
     }()
     
-    private lazy var underLineLeadingAnchor: NSLayoutConstraint = {
-        return underLineView.leadingAnchor.constraint(equalTo: self.leadingAnchor)
-    }()
-    
-    private lazy var underLineViewTrailingAnchor: NSLayoutConstraint = {
-       return underLineView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+    private lazy var selectedUnderLineLeadingAnchor: NSLayoutConstraint = {
+        return selectedUnderLineView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor)
     }()
     
     private lazy var scrollView: UIScrollView = {
@@ -81,7 +78,6 @@ class BaseSegmentView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
-       
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -103,6 +99,7 @@ class BaseSegmentView: UIView {
             createTitleButton(title)
         }
         currentPageChanged(withCurrentInde: currentIndex)
+        updateSegmentViewAfterCurrentIndexChanged()
     }
 }
 
@@ -111,7 +108,9 @@ extension BaseSegmentView {
         addSubview(topDividerView)
         addSubview(scrollView)
         scrollView.addSubview(stackView)
+        scrollView.addSubview(selectedUnderLineView)
         addSubview(bottomDividerView)
+        
         topDividerView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         topDividerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         topDividerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
@@ -131,6 +130,11 @@ extension BaseSegmentView {
         bottomDividerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         bottomDividerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         bottomDividerView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        selectedUnderLineView.heightAnchor.constraint(equalToConstant: 5).isActive = true
+        selectedUnderLineView.widthAnchor.constraint(equalToConstant: Constants.titleButtonWidth).isActive = true
+        selectedUnderLineView.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor).isActive = true
+        selectedUnderLineLeadingAnchor.isActive = true
     }
     
     private func createTitleButton(_ title: String) {
@@ -166,6 +170,13 @@ extension BaseSegmentView {
         var index: Int?
         index = buttonsArray.index(where: {$0 == button})
         return index
+    }
+    
+    private func updateSegmentViewAfterCurrentIndexChanged() {
+        scrollView.scrollRectToVisible(CGRect(x: Constants.titleButtonWidth * CGFloat(currentIndex), y: 0, width: Constants.titleButtonWidth, height: scrollView.frame.width), animated: true)
+        UIView.animate(withDuration: 0.25, animations: {
+            self.selectedUnderLineLeadingAnchor.constant = CGFloat(self.currentIndex) * Constants.titleButtonWidth
+        })
     }
 }
 
