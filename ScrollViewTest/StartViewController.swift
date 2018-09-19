@@ -43,7 +43,7 @@ class StartViewController: UIViewController {
         let collectionViewController = ZCCollectioViewController(nibName: nil, bundle: nil)
         collectionViewController.view.translatesAutoresizingMaskIntoConstraints = false
         collectionViewController.title = "collectionView"
-        collectionViewController.dataSource = ["12", "2", "56", "45", "78", "23300", "0000", "1", "2", "3", "34", "56", "1", "2", "3", "34", "56", "1", "2", "3", "34", "56", "1", "2", "3", "34", "56", "1", "2", "3", "34", "56", "1", "2", "3", "34", "56"]
+        collectionViewController.dataSource = ["12", "2", "56", "45", "12"]
         return collectionViewController
     }()
     
@@ -89,6 +89,7 @@ extension StartViewController: UITableViewDataSource {
             viewController.title = tableViewContents[row]
             viewController.imageArray = [tableImageViews.first!]
             viewController.continerViewArray = [tableContainerViews.first!]
+            viewController.showSegmentView = false
             navigationController?.pushViewController(viewController, animated: true)
         case 2:
             let viewController = BaseMainScrollViewController()

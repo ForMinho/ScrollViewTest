@@ -11,13 +11,19 @@ class BaseMainScrollViewController: UIViewController {
     
     static let cellIdentifier = "CellIdentifier"
     var canScroll: Bool = true
-
+    var showSegmentView: Bool = true {
+        didSet {
+            baseMainContainerViewCell.showSegmentView = showSegmentView
+        }
+    }
+    
     private var webViewHeight: CGFloat = 0
     private let imageViewHeight: CGFloat = 300
     
     private lazy var baseMainContainerViewCell: BaseMainContainerViewCell = {
         let view = BaseMainContainerViewCell(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.showSegmentView = showSegmentView
         return view
     }()
     
@@ -50,17 +56,10 @@ class BaseMainScrollViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: BaseMainContainerViewCell.baseMainContainerViewCellNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: PictureAutoScrollView.pictureAutoScrollViewNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: BaseSegmentView.baseSegmentViewScrolledNotification, object: nil)
-        
-//        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-//            appDelegate.allowRotation = false
-//        }
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-            appDelegate.allowRotation = true
-        }
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     @objc func changeStatusWithNotification(_ notification: Notification) {
@@ -127,7 +126,7 @@ extension BaseMainScrollViewController: UITableViewDataSource {
 extension BaseMainScrollViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let commonScrollHeight = imageViewHeight//tableView.rectForHeader(inSection: 1).maxY
+        let commonScrollHeight = imageViewHeight
         if scrollView.contentOffset.y >= commonScrollHeight {
             scrollView.contentOffset = CGPoint(x: 0, y: commonScrollHeight)
             if canScroll {

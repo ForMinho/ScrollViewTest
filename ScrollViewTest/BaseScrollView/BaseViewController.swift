@@ -10,7 +10,6 @@ import Foundation
 class BaseViewController: UIViewController {
     var canScroll: Bool = false
     static let BaseViewControllerToTop = Notification.Name("BaseViewControllerToTop")
-    static let BaseViewControllerScrolled = Notification.Name("BaseViewControllerScrolled")
     
     override func viewDidLoad() {
         super.viewDidLoad()

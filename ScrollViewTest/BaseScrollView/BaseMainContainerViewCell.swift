@@ -12,7 +12,6 @@ class BaseMainContainerViewCell: UIView {
     static let baseMainContainerViewCellNotification = Notification.Name("baseMainContainerViewCellNotification")
     
     private var lastPosition: CGFloat = 0
-    
     private(set) var currentIndex: Int = 0 {
         didSet {
             guard currentIndex != oldValue else { return }
@@ -56,10 +55,19 @@ class BaseMainContainerViewCell: UIView {
         }
     }
     
+    var showSegmentView: Bool = true {
+        didSet {
+            segmentViewHeightAnchor.constant = showSegmentView ? 50 : 0
+        }
+    }
+    
+    private lazy var segmentViewHeightAnchor: NSLayoutConstraint = {
+       return self.segmentView.heightAnchor.constraint(equalToConstant: 0)
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: BaseViewController.BaseViewControllerScrolled, object: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -78,7 +86,7 @@ extension BaseMainContainerViewCell {
         segmentView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         segmentView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         segmentView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        segmentView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        segmentViewHeightAnchor.isActive = true
         
         addSubview(scrollView)
         scrollView.topAnchor.constraint(equalTo: segmentView.bottomAnchor).isActive = true

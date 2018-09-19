@@ -83,7 +83,9 @@ class BaseSegmentView: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+}
+
+extension BaseSegmentView {
     func currentPageChanged(withCurrentInde index: Int) {
         guard index < dataSource.count else { return }
         currentIndex = index
@@ -191,9 +193,5 @@ extension BaseSegmentView: UIScrollViewDelegate {
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         NotificationCenter.default.post(name: BaseSegmentView.baseSegmentViewScrolledNotification, object: nil, userInfo: ["canScroll": "1"])
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
     }
 }
