@@ -1,11 +1,32 @@
 import Foundation
+class ZCCollectionViewFlowLayout: UICollectionViewFlowLayout {
+    private var frame: CGRect = .zero
+    
+    init(withFrame frame: CGRect) {
+        super.init()
+        self.frame = frame
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override var collectionViewContentSize: CGSize {
+        get { return frame.size }
+        set {
+            guard newValue.height > frame.height else { return }
+            frame.size.height = newValue.height
+        }
+    }
+}
+
 class ZCCollectioViewController: BaseViewController {
     private struct Constants {
         static let collctionViewCellIdentifier = "collctionViewCellIdentifier"
     }
     
     private lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
+        let layout = ZCCollectionViewFlowLayout(withFrame: UIScreen.main.bounds) //UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
