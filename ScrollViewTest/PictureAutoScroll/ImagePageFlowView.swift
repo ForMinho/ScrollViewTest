@@ -1,9 +1,10 @@
 import Foundation
 
 struct ImagePageFlowConfiguration {
-    let currentIndex: Int? // image should show which one at first
-    let duration: Double? // page flow duration
+    let currentIndex: Int // image should show which one at first
+    let duration: Double // page flow duration
 }
+
 protocol ImagePageFlowViewDelegate: class {
     func imagePageFlowViewDidClickedImage(_ imagePageFlowView: ImagePageFlowView, selectedIndex: Int)
 }
@@ -12,8 +13,8 @@ class ImagePageFlowView: UIView {
     static let ImagePageFlowViewNotification = Notification.Name("ImagePageFlowViewNotification")
     weak var delegate: ImagePageFlowViewDelegate?
     
-    private var autoScrollTimer: Timer?
-    private let configuration: ImagePageFlowConfiguration
+    private var imageFlowTimer: Timer?
+    private let configuration: ImagePageFlowConfiguration?
     
     private var images = [String]()
     private var currentIndex: Int
@@ -78,9 +79,9 @@ class ImagePageFlowView: UIView {
         return view
     }()
     
-    init(frame: CGRect, configuration: ImagePageFlowConfiguration, images: [String] = [String]()) {
+    init(frame: CGRect, configuration: ImagePageFlowConfiguration?, images: [String] = [String]()) {
         self.configuration = configuration
-        self.currentIndex = configuration.currentIndex ?? 0
+        self.currentIndex = configuration?.currentIndex ?? 0
         super.init(frame: frame)
         setupViews()
         setImages(forScrollView: images)
@@ -169,15 +170,15 @@ extension ImagePageFlowView {
     
     private func initStartTImer() {
         invalidateTimer()
-        autoScrollTimer = Timer.init(timeInterval: configuration.duration ?? duration, target: self, selector: #selector(autoScrollTimerAction(_:)), userInfo: nil, repeats: true)
-        if let autoScrollTimer = autoScrollTimer {
+        imageFlowTimer = Timer.init(timeInterval: configuration?.duration ?? duration, target: self, selector: #selector(autoScrollTimerAction(_:)), userInfo: nil, repeats: true)
+        if let autoScrollTimer = imageFlowTimer {
             RunLoop.current.add(autoScrollTimer, forMode: .commonModes)
         }
     }
     
-    private func invalidateTimer() {
-        autoScrollTimer?.invalidate()
-        autoScrollTimer = nil
+    func invalidateTimer() {
+        imageFlowTimer?.invalidate()
+        imageFlowTimer = nil
     }
 }
 

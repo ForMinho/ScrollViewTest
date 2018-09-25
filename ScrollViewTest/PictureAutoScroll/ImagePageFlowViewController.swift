@@ -14,7 +14,7 @@ class ImagePageFlowViewController: UIViewController {
         }
     }
     
-    private lazy var imagePageFlowView: ImagePageFlowView = {
+    lazy var imagePageFlowView: ImagePageFlowView = {
         let configuration = ImagePageFlowConfiguration(currentIndex: 2, duration: 2.0)
         let view = ImagePageFlowView(frame: .zero, configuration: configuration)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -25,6 +25,11 @@ class ImagePageFlowViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        imagePageFlowView.invalidateTimer()
     }
     
     func setupView() {
