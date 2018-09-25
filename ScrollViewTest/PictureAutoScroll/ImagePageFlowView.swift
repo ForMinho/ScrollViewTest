@@ -1,18 +1,30 @@
 import Foundation
 
-class PictureAutoScrollView: UIView {
-    static let pictureAutoScrollViewNotification = Notification.Name("pictureAutoScrollViewNotification")
+struct ImagePageFlowConfiguration {
+    let currentIndex: Int? // image should show which one at first
+    let duration: Double? // page flow duration
+}
+protocol ImagePageFlowViewDelegate: class {
+    func imagePageFlowViewDidClickedImage(_ imagePageFlowView: ImagePageFlowView, selectedIndex: Int)
+}
 
+class ImagePageFlowView: UIView {
+    static let ImagePageFlowViewNotification = Notification.Name("ImagePageFlowViewNotification")
+    weak var delegate: ImagePageFlowViewDelegate?
+    
+    private var autoScrollTimer: Timer?
+    private let configuration: ImagePageFlowConfiguration
+    
     private var images = [String]()
-    private var currentIndex: Int = 0
-    var duration: Double = 2.0
+    private var currentIndex: Int
+    private let duration: Double = 2.0
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView(frame: .zero)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.delegate = self
         scrollView.isPagingEnabled = true
-        scrollView.backgroundColor = UIColor.gray
+        scrollView.bounces = false
         scrollView.showsHorizontalScrollIndicator = false
         
         scrollView.addSubview(previousImageView)
@@ -66,10 +78,39 @@ class PictureAutoScrollView: UIView {
         return view
     }()
     
-    private var autoScrollTimer: Timer?
-    
-    override init(frame: CGRect) {
+    init(frame: CGRect, configuration: ImagePageFlowConfiguration, images: [String] = [String]()) {
+        self.configuration = configuration
+        self.currentIndex = configuration.currentIndex ?? 0
         super.init(frame: frame)
+        setupViews()
+        setImages(forScrollView: images)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setImages(forScrollView images: [String]) {
+        guard images.count > 0 else { return }
+        self.images = images
+        currentIndex = currentIndex < images.count ? currentIndex : images.count - 1
+        refreshPageControl()
+        
+        if images.count <= 1 {
+            scrollView.isScrollEnabled = false
+        } else {
+            initStartTImer()
+        }
+        refreshCurrentImageView()
+    }
+    
+    @objc private func tapGestureRecognizerHandler(_ tapGesture: UIGestureRecognizer) {
+        delegate?.imagePageFlowViewDidClickedImage(self, selectedIndex: currentIndex)
+    }
+}
+
+extension ImagePageFlowView {
+    private func setupViews() {
         addSubview(scrollView)
         addSubview(pageControl)
         scrollView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
@@ -79,29 +120,11 @@ class PictureAutoScrollView: UIView {
         
         pageControl.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30).isActive = true
         pageControl.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func setImages(forScrollView images: [String]) {
-        guard images.count > 0 else { return }
-        pageControl.numberOfPages = images.count
-        pageControl.currentPage = 0
-        self.images = images
         
-        if images.count <= 1 {
-            scrollView.isScrollEnabled = false
-        } else {
-            initStartTImer()
-        }
-        refreshCurrentImageView()
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGestureRecognizerHandler(_:)))
+        scrollView.addGestureRecognizer(gestureRecognizer)
     }
-
-}
-
-extension PictureAutoScrollView {
+    
     private func refreshCurrentIndex() {
         if scrollView.contentOffset.x >= scrollView.bounds.width * 2 {
             currentIndex = currentIndex + 1
@@ -131,16 +154,22 @@ extension PictureAutoScrollView {
     private func loadImageView(_ imageView: UIImageView, imageName: String) {
         imageView.image = UIImage(named: imageName)
     }
+    
+    private func refreshPageControl() {
+        pageControl.numberOfPages = images.count
+        pageControl.currentPage = currentIndex
+        pageControl.isHidden = images.count > 1 ? false : true
+    }
 }
 
-extension PictureAutoScrollView {
+extension ImagePageFlowView {
     @objc private func autoScrollTimerAction(_ timer: Timer) {
         scrollView.setContentOffset(CGPoint(x: scrollView.frame.width * 2, y: 0), animated: true)
     }
     
     private func initStartTImer() {
         invalidateTimer()
-        autoScrollTimer = Timer.init(timeInterval: duration, target: self, selector: #selector(autoScrollTimerAction(_:)), userInfo: nil, repeats: true)
+        autoScrollTimer = Timer.init(timeInterval: configuration.duration ?? duration, target: self, selector: #selector(autoScrollTimerAction(_:)), userInfo: nil, repeats: true)
         if let autoScrollTimer = autoScrollTimer {
             RunLoop.current.add(autoScrollTimer, forMode: .commonModes)
         }
@@ -152,10 +181,10 @@ extension PictureAutoScrollView {
     }
 }
 
-extension PictureAutoScrollView: UIScrollViewDelegate {
+extension ImagePageFlowView: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         invalidateTimer()
-        NotificationCenter.default.post(name: PictureAutoScrollView.pictureAutoScrollViewNotification, object: nil, userInfo: ["canScroll": "0"])
+        NotificationCenter.default.post(name: ImagePageFlowView.ImagePageFlowViewNotification, object: nil, userInfo: ["canScroll": "0"])
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
@@ -165,8 +194,7 @@ extension PictureAutoScrollView: UIScrollViewDelegate {
             refreshCurrentImageView()
         }
         initStartTImer()
-        
-        NotificationCenter.default.post(name: PictureAutoScrollView.pictureAutoScrollViewNotification, object: nil, userInfo: ["canScroll": "1"])
+        NotificationCenter.default.post(name: ImagePageFlowView.ImagePageFlowViewNotification, object: nil, userInfo: ["canScroll": "1"])
     }
     
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {

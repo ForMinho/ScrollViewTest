@@ -32,6 +32,6 @@ extension BaseViewController: UIScrollViewDelegate {
             scrollView.contentOffset = .zero
             NotificationCenter.default.post(name: BaseViewController.BaseViewControllerToTop, object: self)
         }
-        scrollView.showsVerticalScrollIndicator = canScroll ? true : false
+        scrollView.showsVerticalScrollIndicator = false //canScroll ? true : false
     }
 }

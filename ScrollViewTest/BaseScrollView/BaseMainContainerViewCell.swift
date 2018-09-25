@@ -34,6 +34,7 @@ class BaseMainContainerViewCell: UIView {
         view.alwaysBounceHorizontal = true
         view.bounces = false
         view.accessibilityIdentifier = "scrollView"
+        view.showsVerticalScrollIndicator = false
         return view
     }()
     

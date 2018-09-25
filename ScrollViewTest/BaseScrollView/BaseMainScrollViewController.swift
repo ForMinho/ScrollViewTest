@@ -27,8 +27,8 @@ class BaseMainScrollViewController: UIViewController {
         return view
     }()
     
-    private lazy var imageAutoScrollViewController: BaseImageAutoScrollViewController = {
-        let viewController = BaseImageAutoScrollViewController(nibName: nil, bundle: nil)
+    private lazy var imageAutoScrollViewController: ImagePageFlowViewController = {
+        let viewController = ImagePageFlowViewController(nibName: nil, bundle: nil)
         viewController.view.translatesAutoresizingMaskIntoConstraints = false
         return viewController
     }()
@@ -39,6 +39,7 @@ class BaseMainScrollViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: BaseMainScrollViewController.cellIdentifier)
+        tableView.showsVerticalScrollIndicator = false
         return tableView
     }()
     
@@ -54,7 +55,7 @@ class BaseMainScrollViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(changeStatusWithNotification(_:)), name: BaseViewController.BaseViewControllerToTop, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: BaseMainContainerViewCell.baseMainContainerViewCellNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: PictureAutoScrollView.pictureAutoScrollViewNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: ImagePageFlowView.ImagePageFlowViewNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateScrollView(_:)), name: BaseSegmentView.baseSegmentViewScrolledNotification, object: nil)
     }
     
@@ -138,6 +139,6 @@ extension BaseMainScrollViewController: UIScrollViewDelegate {
                 scrollView.contentOffset = CGPoint(x: 0, y: commonScrollHeight)
             }
         }
-        scrollView.showsVerticalScrollIndicator = canScroll ? true : false
+//        scrollView.showsVerticalScrollIndicator = canScroll ? true : false
     }
 }
